@@ -1,4 +1,4 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.data
 
 data class Status(
     val id: String,

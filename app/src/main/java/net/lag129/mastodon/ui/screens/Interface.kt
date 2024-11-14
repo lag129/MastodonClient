@@ -1,7 +1,6 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.ui.screens
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
@@ -9,9 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import net.lag129.mastodon.DataViewModel
+import net.lag129.mastodon.ui.components.TimelineViewLayout
 
 @Composable
 fun DataScreen(
@@ -19,18 +20,21 @@ fun DataScreen(
     modifier: Modifier = Modifier
 ) {
     val data by remember { viewModel.data }
-    LazyColumn(
+    Column(
         modifier = modifier
     ) {
-        itemsIndexed(data) { _, status ->
-            TimelineViewLayout(status)
-        }
-        item {
-            Button(onClick = { viewModel.fetchNextPage() }) {
-                Text("Load More")
+        LazyColumn(
+            modifier = Modifier.weight(1f)
+        ) {
+            itemsIndexed(data, key = { index, item -> item.id }) { _, status ->
+                TimelineViewLayout(status)
             }
-            // ボタンをナビゲーションバーの上に表示させるための暫定的な対応
-            Spacer(modifier = Modifier.height(96.dp))
+        }
+        Button(
+            onClick = { viewModel.fetchNextPage() },
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        ) {
+            Text("Load More")
         }
     }
 }

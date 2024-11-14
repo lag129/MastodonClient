@@ -1,4 +1,4 @@
-package net.lag129.mastodon.components
+package net.lag129.mastodon.ui.components
 
 import android.content.Intent
 import android.net.Uri
@@ -45,8 +45,8 @@ import coil3.request.crossfade
 import de.charlex.compose.material3.HtmlText
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import net.lag129.mastodon.Account
-import net.lag129.mastodon.Status
+import net.lag129.mastodon.data.Account
+import net.lag129.mastodon.data.Status
 
 @Composable
 fun TootContent(

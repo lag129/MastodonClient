@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import net.lag129.mastodon.data.Status
 
 class DataViewModel : ViewModel() {
     private val _data = mutableStateOf<List<Status>>(emptyList())
@@ -18,7 +19,7 @@ class DataViewModel : ViewModel() {
     private fun fetchData() {
         viewModelScope.launch {
             try {
-                val result = ApiClient.apiService.fetchData(maxId)
+                val result = ApiClient.apiService.fetchHomeData(maxId)
                 if (result.isNotEmpty()) {
                     maxId = result.last().id
                     _data.value = _data.value + result

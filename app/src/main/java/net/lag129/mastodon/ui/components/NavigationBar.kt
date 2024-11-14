@@ -1,4 +1,4 @@
-package net.lag129.mastodon.components
+package net.lag129.mastodon.ui.components
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons

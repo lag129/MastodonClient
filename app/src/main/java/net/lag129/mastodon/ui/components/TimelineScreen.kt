@@ -1,4 +1,4 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.ui.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -9,20 +9,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import net.lag129.mastodon.components.TootContent
+import net.lag129.mastodon.data.Status
 
 @Composable
 fun TimelineViewLayout(status: Status) {
     if (status.reblog == null) {
         TootContent(status)
     } else {
-        BoostFrom(status.account.displayName)
+        BoostNameBox(status.account.displayName)
         TootContent(status.reblog)
     }
 }
 
 @Composable
-private fun BoostFrom(boostName: String) {
+private fun BoostNameBox(boostName: String) {
     Text(
         text = "\uD83D\uDD01  $boostName さんがブースト",
         color = Color.Gray,
@@ -30,8 +30,7 @@ private fun BoostFrom(boostName: String) {
         fontWeight = FontWeight.Bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        modifier =
-        Modifier.padding(
+        modifier = Modifier.padding(
             start = 35.dp,
             top = 10.dp,
             end = 15.dp

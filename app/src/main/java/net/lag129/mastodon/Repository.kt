@@ -3,6 +3,7 @@ package net.lag129.mastodon
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import net.lag129.mastodon.data.Status
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -13,7 +14,7 @@ import retrofit2.http.Query
 
 interface ApiService {
     @GET("/api/v1/timelines/home")
-    suspend fun fetchData(
+    suspend fun fetchHomeData(
         @Query("max_id") maxId: String? = null,
         @Query("since_id") sinceId: String? = null,
         @Query("limit") limit: Int? = 20

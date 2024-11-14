@@ -18,8 +18,16 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            localPropertiesFile.inputStream().use { inputStream ->
+                localProperties.load(inputStream)
+            }
+        }
+
         // API_KEYを設定する
-        buildConfigField("String", "BEARER_TOKEN", "\"${properties["BEARER_TOKEN"]}\"")
+        buildConfigField("String", "BEARER_TOKEN", "\"${localProperties["BEARER_TOKEN"]}\"")
     }
 
     buildTypes {
