@@ -17,8 +17,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun StatusActionBar(repliesCount: Int, reblogsCount: Int, favouritesCount: Int) {
-    Row {
+fun StatusActionBar(
+    repliesCount: Int,
+    reblogsCount: Int,
+    favouritesCount: Int,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+    ) {
         ReplyLabel(repliesCount)
         BoostLabel(reblogsCount)
         FavoriteLabel(favouritesCount)
@@ -54,7 +61,6 @@ private fun FavoriteLabel(favouritesCount: Int) {
     )
 }
 
-
 @Composable
 private fun BookmarkLabel() {
     Icon(
@@ -64,17 +70,21 @@ private fun BookmarkLabel() {
     )
 }
 
-//@Composable
-//private fun ShareButtonLabel() {
+// @Composable
+// private fun ShareButtonLabel() {
 //    Icon(
 //        imageVector = Icons.Default.Share,
 //        contentDescription = "share",
 //        modifier = Modifier.padding(10.dp)
 //    )
-//}
+// }
 
 @Composable
-private fun Label(icon: ImageVector, count: Int, description: String? = null) {
+private fun Label(
+    icon: ImageVector,
+    count: Int,
+    description: String? = null
+) {
     Row(modifier = Modifier.padding(end = 16.dp)) {
         Icon(
             imageVector = icon,

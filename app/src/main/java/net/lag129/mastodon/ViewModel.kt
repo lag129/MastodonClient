@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class DataViewModel: ViewModel() {
+class DataViewModel : ViewModel() {
     private val _data = mutableStateOf<List<Status>>(emptyList())
     private var maxId: String? = null
     val data: State<List<Status>> = _data

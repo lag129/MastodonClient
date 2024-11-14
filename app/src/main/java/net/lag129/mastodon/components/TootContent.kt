@@ -49,15 +49,17 @@ import net.lag129.mastodon.Account
 import net.lag129.mastodon.Status
 
 @Composable
-fun TootContent(status: Status) {
+fun TootContent(
+    status: Status,
+    modifier: Modifier = Modifier
+) {
     Row(
-        modifier = Modifier
-            .padding(
-                start = 10.dp,
-                top = 10.dp,
-                end = 20.dp,
-                bottom = 10.dp
-            )
+        modifier = modifier.padding(
+            start = 10.dp,
+            top = 10.dp,
+            end = 20.dp,
+            bottom = 10.dp
+        )
     ) {
         AvatarImage(status.account, status.account.url)
         Spacer(Modifier.height(10.dp))
@@ -96,11 +98,15 @@ fun TootContent(status: Status) {
 }
 
 @Composable
-private fun AvatarImage(account: Account, accountUrl: String) {
+private fun AvatarImage(
+    account: Account,
+    accountUrl: String
+) {
     val avatarImageUrl = account.avatar
     var isClicked by remember { mutableStateOf(false) }
     AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
+        model = ImageRequest
+            .Builder(LocalContext.current)
             .data(avatarImageUrl)
             .crossfade(true)
             .build(),
@@ -155,7 +161,10 @@ private fun AcctBox(acct: String) {
 }
 
 @Composable
-private fun SpoilerText(spoilerTxt: String, contentTxt: String) {
+private fun SpoilerText(
+    spoilerTxt: String,
+    contentTxt: String
+) {
     var isClicked by remember { mutableStateOf(false) }
     val textCount = contentTxt.length
     Column {
@@ -166,8 +175,7 @@ private fun SpoilerText(spoilerTxt: String, contentTxt: String) {
             text = if (isClicked) "隠す" else "もっと見る(${textCount}文字)",
             textDecoration = TextDecoration.Underline,
             color = Color(0xff00d9c5),
-            modifier = Modifier
-                .clickable { isClicked = !isClicked }
+            modifier = Modifier.clickable { isClicked = !isClicked }
         )
     }
     if (isClicked) {
@@ -185,7 +193,11 @@ private fun ContentBox(contentTxt: String) {
 }
 
 @Composable
-private fun DisplayImageView(contentImageUrl: String, isSensitive: Boolean = false, isBlurredInitially: Boolean = true) {
+private fun DisplayImageView(
+    contentImageUrl: String,
+    isSensitive: Boolean = false,
+    isBlurredInitially: Boolean = true
+) {
     var isClicked by remember { mutableStateOf(false) }
     var isBlurred by remember { mutableStateOf(isBlurredInitially) }
 
@@ -197,7 +209,8 @@ private fun DisplayImageView(contentImageUrl: String, isSensitive: Boolean = fal
             .clickable { isClicked = true }
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest
+                .Builder(LocalContext.current)
                 .data(contentImageUrl)
                 .crossfade(true)
                 .build(),
@@ -223,10 +236,14 @@ private fun DisplayImageView(contentImageUrl: String, isSensitive: Boolean = fal
 }
 
 @Composable
-private fun FullScreenImageDialog(contentImageUrl: String, onDismissRequest: () -> Unit) {
+private fun FullScreenImageDialog(
+    contentImageUrl: String,
+    onDismissRequest: () -> Unit
+) {
     Dialog(onDismissRequest = onDismissRequest) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest
+                .Builder(LocalContext.current)
                 .data(contentImageUrl)
                 .crossfade(true)
                 .build(),

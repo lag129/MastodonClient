@@ -14,9 +14,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun DataScreen(viewModel: DataViewModel) {
+fun DataScreen(
+    viewModel: DataViewModel,
+    modifier: Modifier = Modifier
+) {
     val data by remember { viewModel.data }
-    LazyColumn {
+    LazyColumn(
+        modifier = modifier
+    ) {
         itemsIndexed(data) { _, status ->
             TimelineViewLayout(status)
         }
@@ -32,7 +37,7 @@ fun DataScreen(viewModel: DataViewModel) {
 
 @Preview
 @Composable
-fun PreviewDataScreen() {
+private fun PreviewDataScreen() {
     val viewModel = DataViewModel()
     DataScreen(viewModel)
 }

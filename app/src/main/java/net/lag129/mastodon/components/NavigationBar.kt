@@ -14,9 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MyNavigationBar() {
+fun MyNavigationBar(
+    modifier: Modifier = Modifier
+) {
     BottomAppBar(
-        modifier = Modifier.height(90.dp)
+        modifier = modifier.height(90.dp)
     ) {
         NavigationBarItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },

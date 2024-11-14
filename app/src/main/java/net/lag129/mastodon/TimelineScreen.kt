@@ -30,7 +30,8 @@ private fun BoostFrom(boostName: String) {
         fontWeight = FontWeight.Bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        modifier = Modifier.padding(
+        modifier =
+        Modifier.padding(
             start = 35.dp,
             top = 10.dp,
             end = 15.dp

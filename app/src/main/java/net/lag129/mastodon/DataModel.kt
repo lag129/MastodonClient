@@ -31,7 +31,7 @@ data class Status(
     val muted: Boolean?,
     val bookmarked: Boolean?,
     val pinned: Boolean?,
-    val filtered: Boolean?,
+    val filtered: Boolean?
 )
 
 data class Account(
@@ -59,13 +59,13 @@ data class Account(
     val lastStatusAt: String? = null,
     val statusesCount: Int,
     val followersCount: Int,
-    val followingCount: Int,
+    val followingCount: Int
 )
 
 data class Field(
     val name: String,
     val value: String,
-    val verifiedAt: String? = null,
+    val verifiedAt: String? = null
 )
 
 data class MediaAttachment(
@@ -76,12 +76,12 @@ data class MediaAttachment(
     val remoteUrl: String? = null,
     val meta: Meta,
     val description: String? = null,
-    val blurhash: String? = null,
+    val blurhash: String? = null
 )
 
 data class Meta(
     val original: MetaOriginal,
-    val small: MetaSmall,
+    val small: MetaSmall
 )
 
 data class MetaOriginal(
@@ -100,27 +100,27 @@ data class MetaSmall(
 
 data class Application(
     val name: String,
-    val website: String? = null,
+    val website: String? = null
 )
 
 data class Mention(
     val id: String,
     val username: String,
     val url: String,
-    val acct: String,
+    val acct: String
 )
 
 data class Tag(
     val name: String,
-    val url: String,
+    val url: String
 )
 
-data class CustomEmoji (
+data class CustomEmoji(
     val shortcode: String,
     val url: String,
     val staticUrl: String,
     val visibleInPicker: Boolean,
-    val category: String? = null,
+    val category: String? = null
 )
 
 data class Poll(
@@ -133,12 +133,12 @@ data class Poll(
     val options: List<PollOption>,
     val emojis: List<CustomEmoji>,
     val voted: Boolean?,
-    val ownVotes: List<Int>,
+    val ownVotes: List<Int>
 )
 
 data class PollOption(
     val title: String,
-    val votesCount: Int? = null,
+    val votesCount: Int? = null
 )
 
 data class PreviewCard(
@@ -156,11 +156,11 @@ data class PreviewCard(
     val height: Int,
     val image: String? = null,
     val embedUrl: String,
-    val blurhash: String? = null,
+    val blurhash: String? = null
 )
 
 data class PreviewCardAuthor(
     val name: String,
     val url: String,
-    val account: Account?,
+    val account: Account?
 )

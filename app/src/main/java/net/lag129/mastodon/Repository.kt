@@ -7,9 +7,9 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.converter.gson.GsonConverterFactory
 
 interface ApiService {
     @GET("/api/v1/timelines/home")
@@ -29,17 +29,21 @@ object ApiClient {
         .create()
 
     private val authInterceptor = Interceptor { chain ->
-        val newRequest: Request = chain.request().newBuilder()
+        val newRequest: Request = chain
+            .request()
+            .newBuilder()
             .addHeader("Authorization", "Bearer $BEARER_TOKEN")
             .build()
         chain.proceed(newRequest)
     }
 
-    private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
+    private val okHttpClient: OkHttpClient = OkHttpClient
+        .Builder()
         .addInterceptor(authInterceptor)
         .build()
 
-    private val retrofit = Retrofit.Builder()
+    private val retrofit = Retrofit
+        .Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create(gson))
