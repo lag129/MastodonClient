@@ -43,8 +43,9 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import de.charlex.compose.material3.HtmlText
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import net.lag129.mastodon.components.StatusActionBar
-import java.time.Instant
 
 @Composable
 fun TimelineViewLayout(status: Status) {
@@ -263,7 +264,7 @@ private fun FullScreenImageDialog(contentImageUrl: String, onDismissRequest: () 
 }
 
 private fun calculateTimeAgo(createdTimeString: String): CharSequence? {
-    val createdTimeMillis = Instant.parse(createdTimeString).toEpochMilli()
-    val currentTimeMillis = Instant.now().toEpochMilli()
+    val createdTimeMillis = Instant.parse(createdTimeString).toEpochMilliseconds()
+    val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
     return DateUtils.getRelativeTimeSpanString(createdTimeMillis, currentTimeMillis, DateUtils.MINUTE_IN_MILLIS)
 }

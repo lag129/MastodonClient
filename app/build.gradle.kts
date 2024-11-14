@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "net.lag129.mastodon"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "net.lag129.mastodon"
@@ -64,10 +64,8 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
-    //noinspection UseTomlInstead
-    implementation("de.charlex.compose.material3:material3-html-text:2.0.0-beta01")
-    //noinspection UseTomlInstead
-    implementation("io.coil-kt.coil3:coil-compose:3.0.0-rc01")
-    //noinspection UseTomlInstead
-    implementation("io.coil-kt.coil3:coil-network-okhttp:3.0.0-rc01")
+    implementation(libs.material3.html.text)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.kotlinx.datetime)
 }
