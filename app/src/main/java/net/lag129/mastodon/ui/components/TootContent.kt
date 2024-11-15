@@ -55,10 +55,10 @@ fun TootContent(
 ) {
     Row(
         modifier = modifier.padding(
-            start = 10.dp,
-            top = 10.dp,
-            end = 20.dp,
-            bottom = 10.dp
+            start = 12.dp,
+            top = 12.dp,
+            end = 28.dp,
+            bottom = 12.dp
         )
     ) {
         AvatarImage(status.account, status.account.url)
@@ -66,12 +66,12 @@ fun TootContent(
         Column(
             modifier = Modifier.padding(start = 10.dp)
         ) {
+            val displayName = status.reblog?.account?.displayName ?: status.account.displayName
+            DisplayNameBox(displayName)
             Row {
-                val displayName = status.reblog?.account?.displayName ?: status.account.displayName
-                DisplayNameBox(displayName)
+                AcctBox(status.account.acct)
                 CreatedAtBox(status.createdAt)
             }
-            AcctBox(status.account.acct)
             Spacer(Modifier.height(10.dp))
             if (status.spoilerText.isNotEmpty()) {
                 SpoilerText(status.spoilerText, status.content)
@@ -131,7 +131,7 @@ private fun AvatarImage(
 private fun DisplayNameBox(displayName: String) {
     Text(
         text = displayName,
-        fontSize = 16.sp,
+        fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
@@ -155,6 +155,8 @@ private fun AcctBox(acct: String) {
     HtmlText(
         text = "@$acct",
         color = Color.Gray,
+        fontSize = 12.sp,
+        fontWeight = FontWeight.Bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
     )
