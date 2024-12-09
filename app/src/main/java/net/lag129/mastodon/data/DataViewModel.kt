@@ -31,7 +31,7 @@ data class Status(
     val muted: Boolean?,
     val bookmarked: Boolean?,
     val pinned: Boolean?,
-    val filtered: Boolean?
+    val filtered: List<FilterResult>?
 )
 
 data class Account(

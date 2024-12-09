@@ -14,7 +14,7 @@ android {
     defaultConfig {
         applicationId = "net.lag129.mastodon"
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.jsoup)
+    implementation(libs.kotlinx.collections.immutable)
 
     lintChecks(libs.compose.lint.checks)
 }

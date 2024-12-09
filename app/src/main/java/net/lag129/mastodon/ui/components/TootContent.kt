@@ -1,5 +1,6 @@
 package net.lag129.mastodon.ui.components
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.text.format.DateUtils
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -34,7 +34,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -46,6 +45,7 @@ import de.charlex.compose.material3.HtmlText
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.lag129.mastodon.data.Account
+import net.lag129.mastodon.data.CustomEmoji
 import net.lag129.mastodon.data.Status
 
 @Composable
@@ -57,7 +57,7 @@ fun TootContent(
         modifier = modifier.padding(
             start = 12.dp,
             top = 12.dp,
-            end = 28.dp,
+            end = 16.dp,
             bottom = 12.dp
         )
     ) {
@@ -74,9 +74,9 @@ fun TootContent(
             }
             Spacer(Modifier.height(10.dp))
             if (status.spoilerText.isNotEmpty()) {
-                SpoilerText(status.spoilerText, status.content)
+//                SpoilerText(status.spoilerText, status.content)
             } else {
-                ContentBox(status.content)
+                ContentBox(status.content, status.emojis)
             }
             Spacer(Modifier.height(10.dp))
             if (status.mediaAttachments.isNotEmpty()) {
@@ -95,6 +95,8 @@ fun TootContent(
         }
     }
     HorizontalDivider(color = Color.DarkGray, thickness = 0.5.dp)
+    println(status.account.acct)
+    println(status.emojis)
 }
 
 @Composable
@@ -162,36 +164,40 @@ private fun AcctBox(acct: String) {
     )
 }
 
-@Composable
-private fun SpoilerText(
-    spoilerTxt: String,
-    contentTxt: String
-) {
-    var isClicked by remember { mutableStateOf(false) }
-    val textCount = contentTxt.length
-    Column {
-        Text(
-            text = spoilerTxt
-        )
-        Text(
-            text = if (isClicked) "隠す" else "もっと見る(${textCount}文字)",
-            textDecoration = TextDecoration.Underline,
-            color = Color(0xff00d9c5),
-            modifier = Modifier.clickable { isClicked = !isClicked }
-        )
-    }
-    if (isClicked) {
-        ContentBox(contentTxt)
-    }
-}
+//@Composable
+//private fun SpoilerText(
+//    spoilerTxt: String,
+//    contentTxt: String
+//) {
+//    var isClicked by remember { mutableStateOf(false) }
+//    val textCount = contentTxt.length
+//    Column {
+//        Text(
+//            text = spoilerTxt
+//        )
+//        Text(
+//            text = if (isClicked) "隠す" else "もっと見る(${textCount}文字)",
+//            textDecoration = TextDecoration.Underline,
+//            color = Color(0xff00d9c5),
+//            modifier = Modifier.clickable { isClicked = !isClicked }
+//        )
+//    }
+//    if (isClicked) {
+//        ContentBox(contentTxt)
+//    }
+//}
 
 @Composable
-private fun ContentBox(contentTxt: String) {
-    SelectionContainer {
-        HtmlText(
-            text = contentTxt
-        )
-    }
+private fun ContentBox(contentTxt: String, @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>) {
+//    SelectionContainer {
+//        Text(
+//            text = AnnotatedString.fromHtml(contentTxt),
+//        )
+//    }
+    TextWithCustomEmoji(
+        text = contentTxt,
+        emojis = emojis
+    )
 }
 
 @Composable
