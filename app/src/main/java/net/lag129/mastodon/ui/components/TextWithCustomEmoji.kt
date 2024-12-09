@@ -12,12 +12,11 @@ import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.unit.sp
+import androidx.core.text.HtmlCompat
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import net.lag129.mastodon.data.CustomEmoji
-import org.jsoup.Jsoup
-import org.jsoup.safety.Safelist
 
 @Composable
 fun TextWithCustomEmoji(
@@ -63,11 +62,16 @@ fun TextWithCustomEmoji(
     )
 }
 
+//private fun parseHtmlToPlainText(html: String): String {
+//    val document = Jsoup.parse(html)
+////    document.getElementsByTag("p").forEach {
+////        it.attr("rel", "nofollow")
+////        it.attr("target", "_blank")
+////    }
+//
+//    return document.getElementsByTag("p").html()
+//}
+
 private fun parseHtmlToPlainText(html: String): String {
-    return Jsoup.clean(html, Safelist.none())
-        .replace("&amp;", "&")
-        .replace("&lt;", "<")
-        .replace("&gt;", ">")
-        .replace("&quot;", "\"")
-        .trim()
+    return HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY).toString()
 }
