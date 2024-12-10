@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.material3.html.text)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+    implementation(libs.coil.gif)
     implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.jsoup)

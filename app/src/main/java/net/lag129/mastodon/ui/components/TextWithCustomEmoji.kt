@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.HtmlCompat
 import coil3.compose.AsyncImage
@@ -43,7 +44,7 @@ fun TextWithCustomEmoji(
 
     val inlineContent = emojis.associate { emoji ->
         emoji.shortcode to InlineTextContent(
-            Placeholder(30.sp, 30.sp, PlaceholderVerticalAlign.Center)
+            Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.Center)
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(context)

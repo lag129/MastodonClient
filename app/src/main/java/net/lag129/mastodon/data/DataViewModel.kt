@@ -170,7 +170,7 @@ data class PreviewCardAuthor(
 data class Reaction(
     val name: String,
     val count: Int,
-    val me: Boolean?,
+    val me: Boolean,
     val url: String?,
     val staticUrl: String?,
     val domain: String?,
