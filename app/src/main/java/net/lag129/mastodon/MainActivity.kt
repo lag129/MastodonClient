@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             MastodonTheme {
                 Scaffold(
                     bottomBar = {
-                        MyNavigationBar(navController = navController)
+                        MyNavigationBar(navController = navController, viewModel = viewModel)
                     }
                 ) { paddingValues ->
                     NavHost(
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                             DataScreen(viewModel = viewModel)
                         }
                         composable(Screen.Global.route) {
-                            // TODO: implement
+                            DataScreen(viewModel = viewModel)
                         }
                         composable(Screen.Info.route) {
                             // TODO: implement
@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 }
 
 sealed class Screen(val route: String) {
-    object Home : Screen("home")
-    object Global : Screen("global")
-    object Info : Screen("info")
+    object Home : Screen("Home")
+    object Global : Screen("Global")
+    object Info : Screen("Info")
 }

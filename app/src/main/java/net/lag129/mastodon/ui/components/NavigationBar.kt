@@ -14,11 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import net.lag129.mastodon.DataViewModel
 import net.lag129.mastodon.Screen
 
 @Composable
 fun MyNavigationBar(
     navController: NavController,
+    viewModel: DataViewModel,
     modifier: Modifier = Modifier
 ) {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -34,13 +36,19 @@ fun MyNavigationBar(
                 navController.navigate(Screen.Home.route) {
                     popUpTo(Screen.Home.route) { inclusive = true }
                 }
+                viewModel.switchTimeline(DataViewModel.Timeline.HOME)
             }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.CheckCircle, contentDescription = "Global") },
             label = { Text(text = "Global") },
-            selected = false,
-            onClick = {}
+            selected = currentRoute == Screen.Global.route,
+            onClick = {
+                navController.navigate(Screen.Global.route) {
+                    popUpTo(Screen.Global.route) { inclusive = true }
+                }
+                viewModel.switchTimeline(DataViewModel.Timeline.GLOBAL)
+            }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Info, contentDescription = "Info") },

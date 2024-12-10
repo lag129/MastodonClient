@@ -19,6 +19,22 @@ interface ApiService {
         @Query("since_id") sinceId: String? = null,
         @Query("limit") limit: Int? = 20
     ): List<Status>
+
+    @GET("/api/v1/timelines/public")
+    suspend fun fetchLocalData(
+        @Query("max_id") maxId: String? = null,
+        @Query("local") local: Boolean? = true,
+        @Query("since_id") sinceId: String? = null,
+        @Query("limit") limit: Int? = 20
+    ): List<Status>
+
+    @GET("/api/v1/timelines/public")
+    suspend fun fetchGlobalData(
+        @Query("max_id") maxId: String? = null,
+        @Query("local") local: Boolean? = false,
+        @Query("since_id") sinceId: String? = null,
+        @Query("limit") limit: Int? = 20
+    ): List<Status>
 }
 
 object ApiClient {

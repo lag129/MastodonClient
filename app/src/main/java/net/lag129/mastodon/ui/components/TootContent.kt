@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -137,7 +138,6 @@ private fun DisplayNameBox(displayName: String) {
         fontWeight = FontWeight.Bold,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis
-//        modifier = Modifier.weight(1f)
     )
 }
 
@@ -148,7 +148,6 @@ private fun CreatedAtBox(createdAt: String) {
         color = Color.Gray,
         fontSize = 12.sp,
         textAlign = TextAlign.End
-//        modifier = Modifier.weight(1f)
     )
 }
 
@@ -189,15 +188,12 @@ private fun AcctBox(acct: String) {
 
 @Composable
 private fun ContentBox(contentTxt: String, @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>) {
-//    SelectionContainer {
-//        Text(
-//            text = AnnotatedString.fromHtml(contentTxt),
-//        )
-//    }
-    TextWithCustomEmoji(
-        text = contentTxt,
-        emojis = emojis
-    )
+    SelectionContainer {
+        TextWithCustomEmoji(
+            text = contentTxt,
+            emojis = emojis
+        )
+    }
 }
 
 @Composable
