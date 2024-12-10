@@ -88,6 +88,7 @@ fun TootContent(
 //                LinkCard(card)
                 Spacer(Modifier.height(10.dp))
             }
+            ReactionBar(status.emojiReactions ?: emptyList())
             StatusActionBar(
                 status.repliesCount,
                 status.reblogsCount,

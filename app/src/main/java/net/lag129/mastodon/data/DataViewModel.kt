@@ -1,5 +1,6 @@
 package net.lag129.mastodon.data
 
+
 data class Status(
     val id: String,
     val uri: String,
@@ -31,7 +32,8 @@ data class Status(
     val muted: Boolean?,
     val bookmarked: Boolean?,
     val pinned: Boolean?,
-    val filtered: List<FilterResult>?
+    val filtered: List<FilterResult>?,
+    val emojiReactions: List<Reaction>?,
 )
 
 data class Account(
@@ -59,7 +61,7 @@ data class Account(
     val lastStatusAt: String? = null,
     val statusesCount: Int,
     val followersCount: Int,
-    val followingCount: Int
+    val followingCount: Int,
 )
 
 data class Field(
@@ -163,4 +165,16 @@ data class PreviewCardAuthor(
     val name: String,
     val url: String,
     val account: Account?
+)
+
+data class Reaction(
+    val name: String,
+    val count: Int,
+    val me: Boolean?,
+    val url: String?,
+    val staticUrl: String?,
+    val domain: String?,
+    val width: Int?,
+    val height: Int?,
+    val accountIds: List<String>? = null
 )
