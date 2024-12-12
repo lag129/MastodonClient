@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,9 +38,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
 import de.charlex.compose.material3.HtmlText
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -97,8 +93,6 @@ fun TootContent(
         }
     }
     HorizontalDivider(color = Color.DarkGray, thickness = 0.5.dp)
-    println(status.account.acct)
-    println(status.emojis)
 }
 
 @Composable
@@ -108,14 +102,9 @@ private fun AvatarImage(
 ) {
     val avatarImageUrl = account.avatar
     var isClicked by remember { mutableStateOf(false) }
+
     AsyncImage(
-        model = ImageRequest
-            .Builder(LocalContext.current)
-            .data(avatarImageUrl)
-            .crossfade(true)
-            .build(),
-        contentDescription = null,
-        contentScale = ContentScale.Crop,
+        url = avatarImageUrl,
         modifier = Modifier
             .padding(top = 5.dp)
             .size(40.dp)
@@ -124,6 +113,7 @@ private fun AvatarImage(
                 isClicked = true
             }
     )
+
     if (isClicked) {
         val context = LocalContext.current
         val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(accountUrl)) }
@@ -214,13 +204,7 @@ private fun DisplayImageView(
             .clickable { isClicked = true }
     ) {
         AsyncImage(
-            model = ImageRequest
-                .Builder(LocalContext.current)
-                .data(contentImageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+            url = contentImageUrl,
             modifier = Modifier
                 .aspectRatio(ratio = 1.618f)
                 .clip(RoundedCornerShape(3))
@@ -247,12 +231,7 @@ private fun FullScreenImageDialog(
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         AsyncImage(
-            model = ImageRequest
-                .Builder(LocalContext.current)
-                .data(contentImageUrl)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
+            url = contentImageUrl,
             modifier = Modifier.fillMaxWidth()
         )
     }
