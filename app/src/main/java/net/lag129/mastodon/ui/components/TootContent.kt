@@ -64,7 +64,7 @@ fun TootContent(
             modifier = Modifier.padding(start = 10.dp)
         ) {
             val displayName = status.reblog?.account?.displayName ?: status.account.displayName
-            DisplayNameBox(displayName)
+            DisplayNameBox(displayName, status.account.emojis)
             Row {
                 AcctBox(status.account.acct)
                 CreatedAtBox(status.createdAt)
@@ -74,17 +74,21 @@ fun TootContent(
 //                SpoilerText(status.spoilerText, status.content)
             } else {
                 ContentBox(status.content, status.emojis)
+                Spacer(Modifier.height(10.dp))
             }
-            Spacer(Modifier.height(10.dp))
+//            Spacer(Modifier.height(10.dp))
             if (status.mediaAttachments.isNotEmpty()) {
                 DisplayImageView(status.mediaAttachments[0].url, status.sensitive)
                 Spacer(Modifier.width(10.dp))
             }
-            if (status.card != null) {
+//            if (status.card != null) {
 //                LinkCard(card)
+//                Spacer(Modifier.height(10.dp))
+//            }
+            if (status.emojiReactions != null) {
+                ReactionBar(status.emojiReactions)
                 Spacer(Modifier.height(10.dp))
             }
-            ReactionBar(status.emojiReactions ?: emptyList())
             StatusActionBar(
                 status.repliesCount,
                 status.reblogsCount,
@@ -122,13 +126,11 @@ private fun AvatarImage(
 }
 
 @Composable
-private fun DisplayNameBox(displayName: String) {
-    Text(
+private fun DisplayNameBox(displayName: String, emojis: List<CustomEmoji>) {
+    TextWithCustomEmoji(
         text = displayName,
-        fontSize = 14.sp,
-        fontWeight = FontWeight.Bold,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        emojis = emojis,
+        modifier = Modifier
     )
 }
 
@@ -144,7 +146,7 @@ private fun CreatedAtBox(createdAt: String) {
 
 @Composable
 private fun AcctBox(acct: String) {
-    HtmlText(
+    Text(
         text = "@$acct",
         color = Color.Gray,
         fontSize = 12.sp,
