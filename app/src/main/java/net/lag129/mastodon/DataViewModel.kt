@@ -35,7 +35,7 @@ class DataViewModel : ViewModel() {
                 val result = when (currentTimeline) {
                     Timeline.HOME -> ApiClient.apiService.fetchHomeData(maxId)
                     Timeline.LOCAL -> ApiClient.apiService.fetchLocalData(maxId)
-                    Timeline.GLOBAL -> ApiClient.apiService.fetchGlobalData(maxId)
+                    Timeline.GLOBAL -> ApiClient.apiService.fetchAccountData("109302719268780804", maxId)
                 }
 
                 if (result.isNotEmpty()) {

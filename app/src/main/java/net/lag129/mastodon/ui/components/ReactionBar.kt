@@ -10,25 +10,52 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import net.lag129.mastodon.ApiClient
 import net.lag129.mastodon.data.Reaction
 
 @Composable
 fun ReactionBar(reactions: List<Reaction>, modifier: Modifier = Modifier) {
     val haptic = LocalHapticFeedback.current
+    val coroutineScope = rememberCoroutineScope()
+    var reactionList by remember { mutableStateOf(reactions) }
+
     Row(
         modifier = modifier
             .height(36.dp)
             .horizontalScroll(rememberScrollState()),
     ) {
-        reactions.forEach { reaction ->
+        reactionList.forEach { reaction ->
             ReactionButton(
                 reaction = reaction,
                 modifier = Modifier.clickable {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    coroutineScope.launch {
+                        try {
+                            if (reaction.me) {
+                                ApiClient.apiService.deleteReaction("112506669135812866", "blobcat")
+                                reactionList = reactionList.map {
+                                    if (it == reaction) it.copy(count = it.count - 1, me = false) else it
+                                }
+                            } else {
+                                ApiClient.apiService.postReaction("112506669135812866", "blobcat")
+                                reactionList = reactionList.map {
+                                    if (it == reaction) it.copy(count = it.count + 1, me = true) else it
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
             )
             Spacer(Modifier.width(10.dp))
@@ -38,11 +65,8 @@ fun ReactionBar(reactions: List<Reaction>, modifier: Modifier = Modifier) {
 
 @Composable
 fun ReactionButton(reaction: Reaction, modifier: Modifier = Modifier) {
-    val haptic = LocalHapticFeedback.current
     FilledTonalButton(
-        onClick = {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-        },
+        onClick = {},
         enabled = reaction.me,
     ) {
         Row {

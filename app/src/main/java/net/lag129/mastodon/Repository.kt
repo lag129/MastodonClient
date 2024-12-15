@@ -9,7 +9,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -35,6 +38,26 @@ interface ApiService {
         @Query("since_id") sinceId: String? = null,
         @Query("limit") limit: Int? = 20
     ): List<Status>
+
+    @GET("/api/v1/accounts/{id}/statuses")
+    suspend fun fetchAccountData(
+        @Path("id") id: String,
+        @Query("max_id") maxId: String? = null,
+        @Query("since_id") sinceId: String? = null,
+        @Query("limit") limit: Int? = 20
+    ): List<Status>
+
+    @PUT("/api/v1/statuses/{id}/emoji_reactions/{emoji}")
+    suspend fun postReaction(
+        @Path("id") id: String,
+        @Path("emoji") emoji: String
+    ): Status
+
+    @DELETE("/api/v1/statuses/{id}/emoji_reactions/{emoji}")
+    suspend fun deleteReaction(
+        @Path("id") id: String,
+        @Path("emoji") emoji: String
+    ): Status
 }
 
 object ApiClient {
