@@ -1,6 +1,6 @@
 package net.lag129.mastodon.ui.components
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +11,14 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import net.lag129.mastodon.data.Reaction
 
 @Composable
 fun ReactionBar(reactions: List<Reaction>, modifier: Modifier = Modifier) {
+    val haptic = LocalHapticFeedback.current
     Row(
         modifier = modifier
             .height(36.dp)
@@ -24,17 +27,22 @@ fun ReactionBar(reactions: List<Reaction>, modifier: Modifier = Modifier) {
         reactions.forEach { reaction ->
             ReactionButton(
                 reaction = reaction,
+                modifier = Modifier.clickable {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
             )
             Spacer(Modifier.width(10.dp))
         }
     }
 }
 
-@SuppressLint("ObsoleteSdkInt")
 @Composable
 fun ReactionButton(reaction: Reaction, modifier: Modifier = Modifier) {
+    val haptic = LocalHapticFeedback.current
     FilledTonalButton(
-        onClick = { },
+        onClick = {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        },
         enabled = reaction.me,
     ) {
         Row {
