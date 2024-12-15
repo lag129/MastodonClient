@@ -26,19 +26,31 @@ fun TextWithCustomEmoji(
 
     val annotatedString = buildAnnotatedString {
         var currentIndex = 0
-        emojis.forEach { emoji ->
-            val startIndex = plainText.indexOf(":${emoji.shortcode}:", currentIndex)
-            if (startIndex != -1) {
-                append(plainText.substring(currentIndex, startIndex))
-                appendInlineContent(emoji.shortcode, emoji.shortcode)
-                currentIndex = startIndex + emoji.shortcode.length + 2
+        while (currentIndex < plainText.length) {
+            val nextEmoji = emojis.minByOrNull { emoji ->
+                val index = plainText.indexOf(":${emoji.shortcode}:", currentIndex)
+                if (index == -1) Int.MAX_VALUE else index
+            }
+            if (nextEmoji != null) {
+                val startIndex = plainText.indexOf(":${nextEmoji.shortcode}:", currentIndex)
+                if (startIndex != -1) {
+                    append(plainText.substring(currentIndex, startIndex))
+                    appendInlineContent(nextEmoji.shortcode, nextEmoji.shortcode)
+                    currentIndex = startIndex + nextEmoji.shortcode.length + 2
+                } else {
+                    append(plainText.substring(currentIndex))
+                    break
+                }
+            } else {
+                append(plainText.substring(currentIndex))
+                break
             }
         }
-        append(plainText.substring(currentIndex))
     }
 
-    val inlineContent = emojis.associate { emoji ->
-        emoji.shortcode to InlineTextContent(
+    val inlineContent = mutableMapOf<String, InlineTextContent>()
+    emojis.forEach { emoji ->
+        inlineContent[emoji.shortcode] = InlineTextContent(
             Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.Center)
         ) {
             AsyncImage(
