@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
 }
 
 sealed class Screen(val route: String) {
-    object Home : Screen("Home")
-    object Global : Screen("Global")
-    object Info : Screen("Info")
+    data object Home : Screen("Home")
+    data object Global : Screen("Global")
+    data object Info : Screen("Info")
 }
