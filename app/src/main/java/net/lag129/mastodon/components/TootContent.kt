@@ -1,4 +1,4 @@
-package net.lag129.mastodon.ui.components
+package net.lag129.mastodon.components
 
 import android.annotation.SuppressLint
 import android.content.Intent

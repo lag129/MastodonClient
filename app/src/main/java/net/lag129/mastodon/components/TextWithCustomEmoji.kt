@@ -1,4 +1,4 @@
-package net.lag129.mastodon.ui.components
+package net.lag129.mastodon.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxWidth

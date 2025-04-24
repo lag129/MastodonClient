@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import net.lag129.mastodon.DataViewModel
-import net.lag129.mastodon.ui.components.TimelineViewLayout
+import net.lag129.mastodon.components.TimelineViewLayout
 
 @Composable
 fun DataScreen(

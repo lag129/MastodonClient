@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import net.lag129.mastodon.ui.components.MyNavigationBar
+import net.lag129.mastodon.components.MyNavigationBar
 import net.lag129.mastodon.ui.screens.DataScreen
 import net.lag129.mastodon.ui.theme.MastodonTheme
 

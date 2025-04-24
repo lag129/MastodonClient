@@ -1,4 +1,4 @@
-package net.lag129.mastodon.ui.components
+package net.lag129.mastodon.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
