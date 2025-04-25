@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.HorizontalDivider
@@ -67,7 +68,7 @@ fun TootContent(
                 AcctBox(status.account.acct)
                 CreatedAtBox(status.createdAt)
             }
-            ContentBox(status.content)
+            ContentBox(status.content, status.emojis)
             Spacer(Modifier.height(10.dp))
             if (status.mediaAttachments.isNotEmpty()) {
                 DisplayImageView(status.mediaAttachments[0].url, status.sensitive)
@@ -117,8 +118,8 @@ private fun DisplayNameBox(
     displayName: String,
     @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>
 ) {
-    TextWithCustomEmoji(
-        text = displayName,
+    HtmlText(
+        html = displayName,
         emojis = emojis,
         modifier = Modifier
     )
@@ -147,10 +148,17 @@ private fun AcctBox(acct: String) {
 }
 
 @Composable
-private fun ContentBox(contentTxt: String) {
-    SelectionContainer {
+private fun ContentBox(
+    contentTxt: String,
+    @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>
+) {
+    SelectionContainer(
+        modifier = Modifier.selectableGroup()
+    ) {
         HtmlText(
             html = contentTxt,
+            emojis = emojis,
+            modifier = Modifier
         )
     }
 }

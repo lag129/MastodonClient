@@ -1,6 +1,9 @@
 package net.lag129.mastodon.components
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -8,12 +11,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.ParagraphStyle
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
+import net.lag129.mastodon.data.CustomEmoji
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -22,6 +28,7 @@ import org.jsoup.nodes.TextNode
 @Composable
 fun HtmlText(
     html: String,
+    @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>,
     modifier: Modifier = Modifier
 ) {
     val annotatedString = buildAnnotatedString {
@@ -29,10 +36,57 @@ fun HtmlText(
         AppendHtmlNodes(doc.body().childNodes(), this)
     }
 
+    val inlineContent = mutableMapOf<String, InlineTextContent>()
+    emojis.forEach { emoji ->
+        inlineContent[emoji.shortcode] = InlineTextContent(
+            Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.Center)
+        ) {
+            AsyncImage(
+                url = emoji.url,
+                modifier = Modifier.fillMaxWidth(),
+            )
+        }
+    }
+
+    print(appendEmojisToText(annotatedString, emojis))
     Text(
-        text = annotatedString,
+        text = appendEmojisToText(annotatedString, emojis),
+        inlineContent = inlineContent,
         modifier = modifier
     )
+}
+
+private fun appendEmojisToText(
+    originalText: AnnotatedString,
+    emojis: List<CustomEmoji>
+): AnnotatedString {
+    if (emojis.isEmpty()) return originalText
+    val plainText = originalText.text
+
+    return buildAnnotatedString {
+        var currentIndex = 0
+        while (currentIndex < plainText.length) {
+            val nextEmoji = emojis.minByOrNull { emoji ->
+                val index = plainText.indexOf(":${emoji.shortcode}:", currentIndex)
+                if (index == -1) Int.MAX_VALUE else index
+            }
+
+            if (nextEmoji != null) {
+                val startIndex = plainText.indexOf(":${nextEmoji.shortcode}:", currentIndex)
+                if (startIndex != -1) {
+                    append(originalText.subSequence(currentIndex, startIndex))
+                    appendInlineContent(nextEmoji.shortcode, nextEmoji.shortcode)
+                    currentIndex = startIndex + nextEmoji.shortcode.length + 2
+                } else {
+                    append(originalText.subSequence(currentIndex, plainText.length))
+                    break
+                }
+            } else {
+                append(originalText.subSequence(currentIndex, plainText.length))
+                break
+            }
+        }
+    }
 }
 
 @Composable
