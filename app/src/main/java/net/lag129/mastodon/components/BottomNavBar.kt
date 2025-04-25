@@ -18,7 +18,7 @@ import net.lag129.mastodon.DataViewModel
 import net.lag129.mastodon.Screen
 
 @Composable
-fun MyNavigationBar(
+fun BottomNavBar(
     navController: NavController,
     viewModel: DataViewModel,
     modifier: Modifier = Modifier

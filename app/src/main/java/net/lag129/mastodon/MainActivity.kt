@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import net.lag129.mastodon.components.MyNavigationBar
+import net.lag129.mastodon.components.BottomNavBar
 import net.lag129.mastodon.ui.screens.DataScreen
 import net.lag129.mastodon.ui.theme.MastodonTheme
 
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
             MastodonTheme {
                 Scaffold(
                     bottomBar = {
-                        MyNavigationBar(navController = navController, viewModel = viewModel)
+                        BottomNavBar(navController = navController, viewModel = viewModel)
                     }
                 ) { paddingValues ->
                     NavHost(
