@@ -1,5 +1,6 @@
 package net.lag129.mastodon.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Row
@@ -24,7 +25,10 @@ import net.lag129.mastodon.ApiClient
 import net.lag129.mastodon.data.Reaction
 
 @Composable
-fun ReactionBar(reactions: List<Reaction>, modifier: Modifier = Modifier) {
+fun ReactionBar(
+    @SuppressLint("ComposeUnstableCollections") reactions: List<Reaction>,
+    modifier: Modifier = Modifier
+) {
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
     var reactionList by remember { mutableStateOf(reactions) }
@@ -44,12 +48,18 @@ fun ReactionBar(reactions: List<Reaction>, modifier: Modifier = Modifier) {
                             if (reaction.me) {
                                 ApiClient.apiService.deleteReaction("112506669135812866", "blobcat")
                                 reactionList = reactionList.map {
-                                    if (it == reaction) it.copy(count = it.count - 1, me = false) else it
+                                    if (it == reaction) it.copy(
+                                        count = it.count - 1,
+                                        me = false
+                                    ) else it
                                 }
                             } else {
                                 ApiClient.apiService.postReaction("112506669135812866", "blobcat")
                                 reactionList = reactionList.map {
-                                    if (it == reaction) it.copy(count = it.count + 1, me = true) else it
+                                    if (it == reaction) it.copy(
+                                        count = it.count + 1,
+                                        me = true
+                                    ) else it
                                 }
                             }
                         } catch (e: Exception) {
@@ -73,8 +83,7 @@ fun ReactionButton(reaction: Reaction, modifier: Modifier = Modifier) {
             reaction.url?.let {
                 if (it.isEmpty()) {
                     Text(reaction.name)
-                }
-                else {
+                } else {
                     AsyncImage(
                         url = it,
                         modifier = modifier
