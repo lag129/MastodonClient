@@ -2,7 +2,6 @@ package net.lag129.mastodon.components
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.net.Uri
 import android.text.format.DateUtils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material3.HorizontalDivider
@@ -38,7 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import de.charlex.compose.material3.HtmlText
+import androidx.core.net.toUri
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.lag129.mastodon.data.Account
@@ -69,23 +67,13 @@ fun TootContent(
                 AcctBox(status.account.acct)
                 CreatedAtBox(status.createdAt)
             }
+            ContentBox(status.content)
             Spacer(Modifier.height(10.dp))
-            if (status.spoilerText.isNotEmpty()) {
-//                SpoilerText(status.spoilerText, status.content)
-            } else {
-                ContentBox(status.content, status.emojis)
-                Spacer(Modifier.height(10.dp))
-            }
-//            Spacer(Modifier.height(10.dp))
             if (status.mediaAttachments.isNotEmpty()) {
                 DisplayImageView(status.mediaAttachments[0].url, status.sensitive)
-                Spacer(Modifier.width(10.dp))
+                Spacer(Modifier.height(10.dp))
             }
-//            if (status.card != null) {
-//                LinkCard(card)
-//                Spacer(Modifier.height(10.dp))
-//            }
-            if (status.emojiReactions != null) {
+            if (!status.emojiReactions.isNullOrEmpty()) {
                 ReactionBar(status.emojiReactions)
                 Spacer(Modifier.height(10.dp))
             }
@@ -117,16 +105,18 @@ private fun AvatarImage(
                 isClicked = true
             }
     )
-
     if (isClicked) {
         val context = LocalContext.current
-        val intent = remember { Intent(Intent.ACTION_VIEW, Uri.parse(accountUrl)) }
+        val intent = remember { Intent(Intent.ACTION_VIEW, accountUrl.toUri()) }
         context.startActivity(intent)
     }
 }
 
 @Composable
-private fun DisplayNameBox(displayName: String, emojis: List<CustomEmoji>) {
+private fun DisplayNameBox(
+    displayName: String,
+    @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>
+) {
     TextWithCustomEmoji(
         text = displayName,
         emojis = emojis,
@@ -156,35 +146,11 @@ private fun AcctBox(acct: String) {
     )
 }
 
-//@Composable
-//private fun SpoilerText(
-//    spoilerTxt: String,
-//    contentTxt: String
-//) {
-//    var isClicked by remember { mutableStateOf(false) }
-//    val textCount = contentTxt.length
-//    Column {
-//        Text(
-//            text = spoilerTxt
-//        )
-//        Text(
-//            text = if (isClicked) "隠す" else "もっと見る(${textCount}文字)",
-//            textDecoration = TextDecoration.Underline,
-//            color = Color(0xff00d9c5),
-//            modifier = Modifier.clickable { isClicked = !isClicked }
-//        )
-//    }
-//    if (isClicked) {
-//        ContentBox(contentTxt)
-//    }
-//}
-
 @Composable
-private fun ContentBox(contentTxt: String, @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>) {
+private fun ContentBox(contentTxt: String) {
     SelectionContainer {
-        TextWithCustomEmoji(
-            text = contentTxt,
-            emojis = emojis
+        HtmlText(
+            html = contentTxt,
         )
     }
 }
@@ -242,5 +208,9 @@ private fun FullScreenImageDialog(
 private fun calculateTimeAgo(createdTimeString: String): CharSequence? {
     val createdTimeMillis = Instant.parse(createdTimeString).toEpochMilliseconds()
     val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
-    return DateUtils.getRelativeTimeSpanString(createdTimeMillis, currentTimeMillis, DateUtils.MINUTE_IN_MILLIS)
+    return DateUtils.getRelativeTimeSpanString(
+        createdTimeMillis,
+        currentTimeMillis,
+        DateUtils.MINUTE_IN_MILLIS
+    )
 }

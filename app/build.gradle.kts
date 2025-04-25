@@ -73,16 +73,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.material3.html.text)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-    implementation(libs.coil.gif)
-    implementation(libs.kotlinx.datetime)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.gif)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.converter.gson)
     implementation(libs.jsoup)
-    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.retrofit)
 
     lintChecks(libs.compose.lint.checks)
 }
