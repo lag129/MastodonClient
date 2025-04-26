@@ -26,6 +26,7 @@ import net.lag129.mastodon.data.Reaction
 
 @Composable
 fun ReactionBar(
+    statusId: String,
     @SuppressLint("ComposeUnstableCollections") reactions: List<Reaction>,
     modifier: Modifier = Modifier
 ) {
@@ -46,7 +47,10 @@ fun ReactionBar(
                     coroutineScope.launch {
                         try {
                             if (reaction.me) {
-                                ApiClient.apiService.deleteReaction("112506669135812866", "blobcat")
+                                ApiClient.apiService.deleteReaction(
+                                    statusId,
+                                    reaction.name
+                                )
                                 reactionList = reactionList.map {
                                     if (it == reaction) it.copy(
                                         count = it.count - 1,
@@ -54,7 +58,10 @@ fun ReactionBar(
                                     ) else it
                                 }
                             } else {
-                                ApiClient.apiService.postReaction("112506669135812866", "blobcat")
+                                ApiClient.apiService.postReaction(
+                                    statusId,
+                                    reaction.name
+                                )
                                 reactionList = reactionList.map {
                                     if (it == reaction) it.copy(
                                         count = it.count + 1,

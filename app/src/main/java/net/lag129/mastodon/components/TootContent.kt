@@ -75,7 +75,7 @@ fun TootContent(
                 Spacer(Modifier.height(10.dp))
             }
             if (!status.emojiReactions.isNullOrEmpty()) {
-                ReactionBar(status.emojiReactions)
+                ReactionBar(status.id, status.emojiReactions)
                 Spacer(Modifier.height(10.dp))
             }
             StatusActionBar(
