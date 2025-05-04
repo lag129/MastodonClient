@@ -48,7 +48,6 @@ fun HtmlText(
         }
     }
 
-    print(appendEmojisToText(annotatedString, emojis))
     Text(
         text = appendEmojisToText(annotatedString, emojis),
         inlineContent = inlineContent,
