@@ -1,14 +1,13 @@
 package net.lag129.mastodon
 
-import com.google.gson.FieldNamingPolicy
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
+import kotlinx.serialization.json.Json
 import net.lag129.mastodon.data.Status
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PUT
@@ -64,10 +63,6 @@ object ApiClient {
     private const val BASE_URL = "https://fedibird.com"
     private const val BEARER_TOKEN = BuildConfig.BEARER_TOKEN
 
-    private val gson: Gson = GsonBuilder()
-        .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-        .create()
-
     private val authInterceptor = Interceptor { chain ->
         val newRequest: Request = chain
             .request()
@@ -77,16 +72,20 @@ object ApiClient {
         chain.proceed(newRequest)
     }
 
-    private val okHttpClient: OkHttpClient = OkHttpClient
-        .Builder()
+    private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(authInterceptor)
         .build()
 
-    private val retrofit = Retrofit
-        .Builder()
+    private val json = Json {
+        ignoreUnknownKeys = true
+    }
+
+    private val retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
+        .addConverterFactory(
+            json.asConverterFactory("application/json".toMediaType())
+        )
         .build()
 
     val apiService: ApiService = retrofit.create(ApiService::class.java)

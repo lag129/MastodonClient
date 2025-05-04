@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "RememberTest"
+rootProject.name = "Mastodon"
 include(":app")
  
