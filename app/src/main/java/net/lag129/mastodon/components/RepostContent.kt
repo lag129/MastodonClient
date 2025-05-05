@@ -12,12 +12,12 @@ import androidx.compose.ui.unit.sp
 import net.lag129.mastodon.data.Status
 
 @Composable
-fun TimelineViewLayout(status: Status) {
+fun RepostContent(status: Status) {
     if (status.reblog == null) {
-        TootContent(status)
+        PostContent(status)
     } else {
         BoostNameBox(status.account.displayName)
-        TootContent(status.reblog)
+        PostContent(status.reblog)
     }
 }
 

@@ -45,7 +45,7 @@ import net.lag129.mastodon.data.CustomEmoji
 import net.lag129.mastodon.data.Status
 
 @Composable
-fun TootContent(
+fun PostContent(
     status: Status,
     modifier: Modifier = Modifier
 ) {

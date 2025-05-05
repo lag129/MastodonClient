@@ -12,10 +12,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import net.lag129.mastodon.DataViewModel
-import net.lag129.mastodon.components.TimelineViewLayout
+import net.lag129.mastodon.components.RepostContent
 
 @Composable
-fun DataScreen(
+fun TimelineScreen(
     viewModel: DataViewModel,
     modifier: Modifier = Modifier
 ) {
@@ -27,7 +27,7 @@ fun DataScreen(
             modifier = Modifier.weight(1f)
         ) {
             itemsIndexed(data, key = { index, item -> item.id }) { _, status ->
-                TimelineViewLayout(status)
+                RepostContent(status)
             }
         }
         Button(
@@ -43,5 +43,5 @@ fun DataScreen(
 @Composable
 private fun PreviewDataScreen() {
     val viewModel = DataViewModel()
-    DataScreen(viewModel)
+    TimelineScreen(viewModel)
 }
