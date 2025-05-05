@@ -24,8 +24,8 @@ data class Meta(
 data class MetaOriginal(
     val width: Int,
     val height: Int,
-    val size: String,
-    val aspect: Float
+    val size: String? = null,
+    val aspect: Float? = null
 )
 
 @Serializable
