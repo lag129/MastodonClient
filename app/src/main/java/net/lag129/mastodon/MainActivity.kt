@@ -46,25 +46,29 @@ class MainActivity : ComponentActivity() {
                     startDestination = if (isLoggedIn) Screen.Home.route else Screen.Login.route
                 ) {
                     composable(Screen.Login.route) {
-                        FirstLaunchScreen(
-                            onServerNameChanged = { serverName ->
-                                coroutineScope.launch {
-                                    authViewModel.updateServerName(serverName)
-                                }
-                            },
-                            onBearerTokenChanged = { token ->
-                                coroutineScope.launch {
-                                    authViewModel.updateBearerToken(token)
-                                    // 認証情報が設定された後にホーム画面に遷移
-                                    if (!serverName.isNullOrEmpty()) {
-                                        navController.navigate(Screen.Home.route) {
-                                            popUpTo(Screen.Login.route) { inclusive = true }
+                        Scaffold { paddingValues ->
+                            FirstLaunchScreen(
+                                authViewModel = authViewModel,
+                                onServerNameChanged = { serverName ->
+                                    coroutineScope.launch {
+                                        authViewModel.setServerName(serverName)
+                                        println("サーバー名: $serverName")
+                                    }
+                                },
+                                onBearerTokenChanged = { token ->
+                                    coroutineScope.launch {
+                                        authViewModel.setBearerToken(token)
+                                        println("トークン: $token")
+                                        if (serverName.isNullOrEmpty()) {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(Screen.Login.route) { inclusive = true }
+                                            }
                                         }
                                     }
-                                }
-                            },
-                            modifier = Modifier
-                        )
+                                },
+                                modifier = Modifier.padding(paddingValues)
+                            )
+                        }
                     }
 
                     composable(Screen.Home.route) {

@@ -1,8 +1,6 @@
 package net.lag129.mastodon
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import net.lag129.mastodon.data.Status
 import okhttp3.Interceptor
@@ -35,13 +33,13 @@ interface ApiService {
         @Query("limit") limit: Int? = 20
     ): List<Status>
 
-    @GET("/api/v1/timelines/public")
-    suspend fun fetchGlobalData(
-        @Query("max_id") maxId: String? = null,
-        @Query("local") local: Boolean? = false,
-        @Query("since_id") sinceId: String? = null,
-        @Query("limit") limit: Int? = 20
-    ): List<Status>
+//    @GET("/api/v1/timelines/public")
+//    suspend fun fetchGlobalData(
+//        @Query("max_id") maxId: String? = null,
+//        @Query("local") local: Boolean? = false,
+//        @Query("since_id") sinceId: String? = null,
+//        @Query("limit") limit: Int? = 20
+//    ): List<Status>
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun fetchAccountData(
@@ -66,57 +64,38 @@ interface ApiService {
 
 @Singleton
 class ApiClient @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val preferencesRepository: PreferencesRepository
 ) {
-    private val serverName = dataStoreRepository.getServerName()
-    private val bearerToken = dataStoreRepository.getBearerToken()
-    private val baseUrl = "https://${serverName}"
-
-    private var cachedServerName: String? = null
-    private var cachedBearerToken: String? = null
-
-    //コンソールに出力する
-    init {
-        // Flow監視用の処理を追加
-        CoroutineScope(Dispatchers.IO).launch {
-            dataStoreRepository.getServerName().collect { serverName ->
-                cachedServerName = serverName
-                println("ServerName更新: $serverName")
-            }
-        }
-
-        CoroutineScope(Dispatchers.IO).launch {
-            dataStoreRepository.getBearerToken().collect { token ->
-                cachedBearerToken = token
-                println("BearerToken更新: $token")
-            }
-        }
-    }
-
-    private val authInterceptor = Interceptor { chain ->
-        val newRequest: Request = chain
-            .request()
-            .newBuilder()
-            .addHeader("Authorization", "Bearer $bearerToken")
-            .build()
-        chain.proceed(newRequest)
-    }
-
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(authInterceptor)
-        .build()
-
     private val json = Json {
         ignoreUnknownKeys = true
     }
 
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .client(okHttpClient)
-        .addConverterFactory(
-            json.asConverterFactory("application/json".toMediaType())
-        )
-        .build()
+    fun createApiService(): ApiService {
+        val serverName = runBlocking { preferencesRepository.readServerName() }
+        val bearerToken = runBlocking { preferencesRepository.readBearerToken() }
+        val baseUrl = "https://$serverName"
 
-    val apiService: ApiService = retrofit.create(ApiService::class.java)
+        val authInterceptor = Interceptor { chain ->
+            val newRequest: Request = chain
+                .request()
+                .newBuilder()
+                .addHeader("Authorization", "Bearer $bearerToken")
+                .build()
+            chain.proceed(newRequest)
+        }
+
+        val okHttpClient = OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .addConverterFactory(
+                json.asConverterFactory("application/json".toMediaType())
+            )
+            .build()
+
+        return retrofit.create(ApiService::class.java)
+    }
 }

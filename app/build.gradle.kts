@@ -1,5 +1,3 @@
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.dagger.hilt.android)
@@ -22,17 +20,6 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localPropertiesFile.inputStream().use { inputStream ->
-                localProperties.load(inputStream)
-            }
-        }
-
-        // API_KEYを設定する
-        buildConfigField("String", "BEARER_TOKEN", "\"${localProperties["BEARER_TOKEN"]}\"")
     }
 
     buildTypes {
@@ -53,8 +40,6 @@ android {
     }
     buildFeatures {
         compose = true
-        // API_KEY設定のためtrueにする
-        buildConfig = true
     }
 }
 

@@ -50,7 +50,7 @@ fun ReactionBar(
                     coroutineScope.launch {
                         try {
                             if (reaction.me) {
-                                apiClient.apiService.deleteReaction(
+                                apiClient.createApiService().deleteReaction(
                                     statusId,
                                     reaction.name
                                 )
@@ -61,7 +61,7 @@ fun ReactionBar(
                                     ) else it
                                 }
                             } else {
-                                apiClient.apiService.postReaction(
+                                apiClient.createApiService().postReaction(
                                     statusId,
                                     reaction.name
                                 )

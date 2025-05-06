@@ -20,8 +20,6 @@ class DataViewModel @Inject constructor(
     private var currentTimeline = Timeline.HOME
 
     val data = _data as State<List<Status>>
-    val isLoading = _isLoading as State<Boolean>
-    val error = _error as State<String?>
 
     enum class Timeline {
         HOME, LOCAL, GLOBAL
@@ -38,9 +36,9 @@ class DataViewModel @Inject constructor(
                 _error.value = null
 
                 val result = when (currentTimeline) {
-                    Timeline.HOME -> apiClient.apiService.fetchHomeData(maxId)
-                    Timeline.LOCAL -> apiClient.apiService.fetchLocalData(maxId)
-                    Timeline.GLOBAL -> apiClient.apiService.fetchAccountData(
+                    Timeline.HOME -> apiClient.createApiService().fetchHomeData(maxId)
+                    Timeline.LOCAL -> apiClient.createApiService().fetchLocalData(maxId)
+                    Timeline.GLOBAL -> apiClient.createApiService().fetchAccountData(
                         "109302719268780804",
                         maxId
                     )
@@ -65,11 +63,11 @@ class DataViewModel @Inject constructor(
         }
     }
 
-    fun refresh() {
-        maxId = null
-        _data.value = emptyList()
-        fetchData()
-    }
+//    fun refresh() {
+//        maxId = null
+//        _data.value = emptyList()
+//        fetchData()
+//    }
 
     fun switchTimeline(timeline: Timeline) {
         if (currentTimeline != timeline) {

@@ -3,27 +3,43 @@ package net.lag129.mastodon
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val dataStoreRepository: DataStoreRepository
+    private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
-    val serverName: StateFlow<String?> = dataStoreRepository.getServerName()
-        .stateIn(viewModelScope, SharingStarted.Lazily, null)
-
-    val bearerToken: StateFlow<String?> = dataStoreRepository.getBearerToken()
-        .stateIn(viewModelScope, SharingStarted.Lazily, null)
-
-    suspend fun updateServerName(serverName: String) {
-        dataStoreRepository.saveServerName(serverName)
+    fun setServerName(serverName: String) {
+        viewModelScope.launch {
+            preferencesRepository.saveServerName(serverName)
+        }
     }
 
-    suspend fun updateBearerToken(token: String) {
-        dataStoreRepository.saveBearerToken(token)
+    private val _serverName = MutableStateFlow<String?>(null)
+    val serverName = _serverName.asStateFlow()
+    fun getServerName() {
+        viewModelScope.launch {
+            val serverName = preferencesRepository.readServerName()
+            _serverName.emit(serverName.toString())
+        }
+    }
+
+    fun setBearerToken(bearerToken: String) {
+        viewModelScope.launch {
+            preferencesRepository.saveBearerToken(bearerToken)
+        }
+    }
+
+    private val _bearerToken = MutableStateFlow<String?>(null)
+    val bearerToken = _bearerToken.asStateFlow()
+    fun getBearerToken() {
+        viewModelScope.launch {
+            val bearerToken = preferencesRepository.readBearerToken()
+            _bearerToken.emit(bearerToken.toString())
+        }
     }
 }
