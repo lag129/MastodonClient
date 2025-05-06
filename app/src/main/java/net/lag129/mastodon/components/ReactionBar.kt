@@ -20,15 +20,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import net.lag129.mastodon.ApiClient
+import net.lag129.mastodon.DataViewModel
 import net.lag129.mastodon.data.Reaction
 
 @Composable
 fun ReactionBar(
     statusId: String,
     @SuppressLint("ComposeUnstableCollections") reactions: List<Reaction>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    apiClient: ApiClient = hiltViewModel<DataViewModel>().apiClient
 ) {
     val haptic = LocalHapticFeedback.current
     val coroutineScope = rememberCoroutineScope()
@@ -47,7 +50,7 @@ fun ReactionBar(
                     coroutineScope.launch {
                         try {
                             if (reaction.me) {
-                                ApiClient.apiService.deleteReaction(
+                                apiClient.apiService.deleteReaction(
                                     statusId,
                                     reaction.name
                                 )
@@ -58,7 +61,7 @@ fun ReactionBar(
                                     ) else it
                                 }
                             } else {
-                                ApiClient.apiService.postReaction(
+                                apiClient.apiService.postReaction(
                                     statusId,
                                     reaction.name
                                 )

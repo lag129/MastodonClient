@@ -4,10 +4,15 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import net.lag129.mastodon.data.Status
+import javax.inject.Inject
 
-class DataViewModel : ViewModel() {
+@HiltViewModel
+class DataViewModel @Inject constructor(
+    val apiClient: ApiClient
+) : ViewModel() {
     private val _data = mutableStateOf<List<Status>>(emptyList())
     private val _isLoading = mutableStateOf(false)
     private val _error = mutableStateOf<String?>(null)
@@ -33,9 +38,9 @@ class DataViewModel : ViewModel() {
                 _error.value = null
 
                 val result = when (currentTimeline) {
-                    Timeline.HOME -> ApiClient.apiService.fetchHomeData(maxId)
-                    Timeline.LOCAL -> ApiClient.apiService.fetchLocalData(maxId)
-                    Timeline.GLOBAL -> ApiClient.apiService.fetchAccountData(
+                    Timeline.HOME -> apiClient.apiService.fetchHomeData(maxId)
+                    Timeline.LOCAL -> apiClient.apiService.fetchLocalData(maxId)
+                    Timeline.GLOBAL -> apiClient.apiService.fetchAccountData(
                         "109302719268780804",
                         maxId
                     )

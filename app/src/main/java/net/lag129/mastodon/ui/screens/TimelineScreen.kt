@@ -10,7 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import net.lag129.mastodon.DataViewModel
 import net.lag129.mastodon.components.RepostContent
 
@@ -37,11 +36,4 @@ fun TimelineScreen(
             Text("Load More")
         }
     }
-}
-
-@Preview
-@Composable
-private fun PreviewDataScreen() {
-    val viewModel = DataViewModel()
-    TimelineScreen(viewModel)
 }

@@ -1,5 +1,8 @@
 package net.lag129.mastodon
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import net.lag129.mastodon.data.Status
 import okhttp3.Interceptor
@@ -13,6 +16,8 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
+import javax.inject.Inject
+import javax.inject.Singleton
 
 interface ApiService {
     @GET("/api/v1/timelines/home")
@@ -59,15 +64,40 @@ interface ApiService {
     ): Status
 }
 
-object ApiClient {
-    private const val BASE_URL = "https://fedibird.com"
-    private const val BEARER_TOKEN = BuildConfig.BEARER_TOKEN
+@Singleton
+class ApiClient @Inject constructor(
+    private val dataStoreRepository: DataStoreRepository
+) {
+    private val serverName = dataStoreRepository.getServerName()
+    private val bearerToken = dataStoreRepository.getBearerToken()
+    private val baseUrl = "https://${serverName}"
+
+    private var cachedServerName: String? = null
+    private var cachedBearerToken: String? = null
+
+    //コンソールに出力する
+    init {
+        // Flow監視用の処理を追加
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStoreRepository.getServerName().collect { serverName ->
+                cachedServerName = serverName
+                println("ServerName更新: $serverName")
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStoreRepository.getBearerToken().collect { token ->
+                cachedBearerToken = token
+                println("BearerToken更新: $token")
+            }
+        }
+    }
 
     private val authInterceptor = Interceptor { chain ->
         val newRequest: Request = chain
             .request()
             .newBuilder()
-            .addHeader("Authorization", "Bearer $BEARER_TOKEN")
+            .addHeader("Authorization", "Bearer $bearerToken")
             .build()
         chain.proceed(newRequest)
     }
@@ -81,7 +111,7 @@ object ApiClient {
     }
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+        .baseUrl(baseUrl)
         .client(okHttpClient)
         .addConverterFactory(
             json.asConverterFactory("application/json".toMediaType())
