@@ -52,13 +52,11 @@ class MainActivity : ComponentActivity() {
                                 onServerNameChanged = { serverName ->
                                     coroutineScope.launch {
                                         authViewModel.setServerName(serverName)
-                                        println("サーバー名: $serverName")
                                     }
                                 },
                                 onBearerTokenChanged = { token ->
                                     coroutineScope.launch {
                                         authViewModel.setBearerToken(token)
-                                        println("トークン: $token")
                                         if (serverName.isNullOrEmpty()) {
                                             navController.navigate(Screen.Home.route) {
                                                 popUpTo(Screen.Login.route) { inclusive = true }

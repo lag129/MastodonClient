@@ -13,14 +13,23 @@ class AuthViewModel @Inject constructor(
     private val preferencesRepository: PreferencesRepository
 ) : ViewModel() {
 
+    private val _serverName = MutableStateFlow<String?>(null)
+    val serverName = _serverName.asStateFlow()
+
+    private val _bearerToken = MutableStateFlow<String?>(null)
+    val bearerToken = _bearerToken.asStateFlow()
+
+    init {
+        getServerName()
+        getBearerToken()
+    }
+
     fun setServerName(serverName: String) {
         viewModelScope.launch {
             preferencesRepository.saveServerName(serverName)
         }
     }
 
-    private val _serverName = MutableStateFlow<String?>(null)
-    val serverName = _serverName.asStateFlow()
     fun getServerName() {
         viewModelScope.launch {
             val serverName = preferencesRepository.readServerName()
@@ -34,8 +43,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private val _bearerToken = MutableStateFlow<String?>(null)
-    val bearerToken = _bearerToken.asStateFlow()
     fun getBearerToken() {
         viewModelScope.launch {
             val bearerToken = preferencesRepository.readBearerToken()
