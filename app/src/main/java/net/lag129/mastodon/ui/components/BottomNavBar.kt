@@ -1,4 +1,4 @@
-package net.lag129.mastodon.components
+package net.lag129.mastodon.ui.components
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import net.lag129.mastodon.DataViewModel
 import net.lag129.mastodon.Screen
+import net.lag129.mastodon.viewmodel.DataViewModel
 
 @Composable
 fun BottomNavBar(

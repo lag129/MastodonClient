@@ -1,4 +1,4 @@
-package net.lag129.mastodon.data
+package net.lag129.mastodon.data.model
 
 import kotlinx.serialization.Serializable
 

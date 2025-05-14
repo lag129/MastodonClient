@@ -1,4 +1,4 @@
-package net.lag129.mastodon.components
+package net.lag129.mastodon.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -22,9 +22,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
-import net.lag129.mastodon.ApiClient
-import net.lag129.mastodon.DataViewModel
-import net.lag129.mastodon.data.Reaction
+import net.lag129.mastodon.data.model.Reaction
+import net.lag129.mastodon.data.repository.ApiClient
+import net.lag129.mastodon.viewmodel.DataViewModel
 
 @Composable
 fun ReactionBar(

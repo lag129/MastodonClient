@@ -17,10 +17,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import net.lag129.mastodon.components.BottomNavBar
+import net.lag129.mastodon.ui.components.BottomNavBar
 import net.lag129.mastodon.ui.screens.FirstLaunchScreen
 import net.lag129.mastodon.ui.screens.TimelineScreen
 import net.lag129.mastodon.ui.theme.MastodonTheme
+import net.lag129.mastodon.viewmodel.AuthViewModel
+import net.lag129.mastodon.viewmodel.DataViewModel
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -34,9 +36,10 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
+            val coroutineScope = rememberCoroutineScope()
+
             val serverName by authViewModel.serverName.collectAsStateWithLifecycle()
             val bearerToken by authViewModel.bearerToken.collectAsStateWithLifecycle()
-            val coroutineScope = rememberCoroutineScope()
 
             val isLoggedIn = !serverName.isNullOrEmpty() && !bearerToken.isNullOrEmpty()
 

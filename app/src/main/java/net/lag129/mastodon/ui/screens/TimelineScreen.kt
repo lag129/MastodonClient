@@ -11,8 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import net.lag129.mastodon.DataViewModel
-import net.lag129.mastodon.components.RepostContent
+import net.lag129.mastodon.ui.components.RepostContent
+import net.lag129.mastodon.viewmodel.DataViewModel
 
 @Composable
 fun TimelineScreen(

@@ -17,7 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import net.lag129.mastodon.AuthViewModel
+import net.lag129.mastodon.viewmodel.AuthViewModel
 
 @Composable
 fun FirstLaunchScreen(

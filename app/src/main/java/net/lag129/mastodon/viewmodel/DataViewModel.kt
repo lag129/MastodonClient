@@ -1,4 +1,4 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.viewmodel
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import net.lag129.mastodon.data.Status
+import net.lag129.mastodon.data.model.Status
+import net.lag129.mastodon.data.repository.ApiClient
 import javax.inject.Inject
 
 @HiltViewModel

@@ -1,4 +1,4 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

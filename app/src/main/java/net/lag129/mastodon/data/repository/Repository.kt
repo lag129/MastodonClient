@@ -1,8 +1,8 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.data.repository
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
-import net.lag129.mastodon.data.Status
+import net.lag129.mastodon.data.model.Status
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

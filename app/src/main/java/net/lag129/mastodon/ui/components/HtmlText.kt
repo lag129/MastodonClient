@@ -1,4 +1,4 @@
-package net.lag129.mastodon.components
+package net.lag129.mastodon.ui.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import net.lag129.mastodon.data.CustomEmoji
+import net.lag129.mastodon.data.model.CustomEmoji
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node

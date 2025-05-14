@@ -1,4 +1,4 @@
-package net.lag129.mastodon.components
+package net.lag129.mastodon.ui.components
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -40,9 +40,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.net.toUri
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import net.lag129.mastodon.data.Account
-import net.lag129.mastodon.data.CustomEmoji
-import net.lag129.mastodon.data.Status
+import net.lag129.mastodon.data.model.Account
+import net.lag129.mastodon.data.model.CustomEmoji
+import net.lag129.mastodon.data.model.Status
 
 @Composable
 fun PostContent(

@@ -1,4 +1,4 @@
-package net.lag129.mastodon
+package net.lag129.mastodon.data.repository
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
