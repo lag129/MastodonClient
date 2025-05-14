@@ -3,11 +3,13 @@ package net.lag129.mastodon.ui.components
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -84,10 +86,16 @@ fun ReactionBar(
 }
 
 @Composable
-fun ReactionButton(reaction: Reaction, modifier: Modifier = Modifier) {
+fun ReactionButton(
+    reaction: Reaction,
+    modifier: Modifier = Modifier
+) {
     FilledTonalButton(
         onClick = {},
+        contentPadding = PaddingValues(8.dp),
         enabled = reaction.me,
+        shape = RoundedCornerShape(32),
+        modifier = modifier
     ) {
         Row {
             reaction.url?.let {
@@ -96,10 +104,11 @@ fun ReactionButton(reaction: Reaction, modifier: Modifier = Modifier) {
                 } else {
                     AsyncImage(
                         url = it,
-                        modifier = modifier
+                        modifier = Modifier
                     )
                 }
             }
+            Spacer(Modifier.width(8.dp))
             Text(reaction.count.toString())
         }
     }
