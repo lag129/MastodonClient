@@ -2,6 +2,7 @@ package net.lag129.mastodon.ui.screens
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
@@ -41,7 +42,7 @@ fun LoadingIndicator(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = modifier
+        modifier = modifier.fillMaxSize()
     ) {
         CircularProgressIndicator()
     }

@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.ParagraphStyle
@@ -18,6 +19,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import net.lag129.mastodon.data.model.CustomEmoji
 import org.jsoup.Jsoup
@@ -29,7 +31,9 @@ import org.jsoup.nodes.TextNode
 fun HtmlText(
     html: String,
     @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    color: Color? = null,
+    fontSize: TextUnit? = null
 ) {
     val annotatedString = buildAnnotatedString {
         val doc = Jsoup.parseBodyFragment(html)
@@ -51,6 +55,8 @@ fun HtmlText(
     Text(
         text = appendEmojisToText(annotatedString, emojis),
         inlineContent = inlineContent,
+        color = color ?: Color.Unspecified,
+        fontSize = fontSize ?: TextUnit.Unspecified,
         modifier = modifier
     )
 }
