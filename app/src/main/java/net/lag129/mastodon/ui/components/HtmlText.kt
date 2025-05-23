@@ -33,7 +33,8 @@ fun HtmlText(
     @SuppressLint("ComposeUnstableCollections") emojis: List<CustomEmoji>,
     modifier: Modifier = Modifier,
     color: Color? = null,
-    fontSize: TextUnit? = null
+    fontSize: TextUnit? = null,
+    lineHeight: TextUnit? = null
 ) {
     val annotatedString = buildAnnotatedString {
         val doc = Jsoup.parseBodyFragment(html)
@@ -57,6 +58,7 @@ fun HtmlText(
         inlineContent = inlineContent,
         color = color ?: Color.Unspecified,
         fontSize = fontSize ?: TextUnit.Unspecified,
+        lineHeight = lineHeight ?: TextUnit.Unspecified,
         modifier = modifier
     )
 }

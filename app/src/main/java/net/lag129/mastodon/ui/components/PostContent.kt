@@ -50,7 +50,7 @@ fun PostContent(
     status: Status,
     modifier: Modifier = Modifier
 ) {
-    Row(
+    Column(
         modifier = modifier.padding(
             start = 12.dp,
             top = 12.dp,
@@ -58,20 +58,37 @@ fun PostContent(
             bottom = 12.dp
         )
     ) {
-        AvatarImage(status.account, status.account.url)
-        Spacer(Modifier.height(10.dp))
-        Column(
-            modifier = Modifier.padding(start = 10.dp)
-        ) {
-            val displayName = status.reblog?.account?.displayName ?: status.account.displayName
-            DisplayNameBox(displayName, status.account.emojis)
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+        Row {
+            Box(
+                contentAlignment = Alignment.CenterStart,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .size(width = 50.dp, height = 55.dp)
             ) {
-                AcctBox(status.account.acct)
-                CreatedAtBox(status.createdAt)
+                AvatarImage(status.account, status.account.url)
             }
+            Column {
+                val displayName =
+                    status.reblog?.account?.displayName ?: status.account.displayName
+                DisplayNameBox(displayName, status.account.emojis)
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    AcctBox(
+                        status.account.acct,
+                        modifier = Modifier.alignByBaseline()
+                    )
+                    CreatedAtBox(
+                        status.createdAt,
+                        modifier = Modifier.alignByBaseline()
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier.padding(start = 50.dp)
+        ) {
             ContentBox(status.content, status.emojis)
             Spacer(Modifier.height(10.dp))
             if (status.mediaAttachments.isNotEmpty()) {
@@ -103,7 +120,6 @@ private fun AvatarImage(
     AsyncImage(
         url = avatarImageUrl,
         modifier = Modifier
-            .padding(top = 5.dp)
             .size(40.dp)
             .clip(RoundedCornerShape(30))
             .clickable {
@@ -125,28 +141,39 @@ private fun DisplayNameBox(
     HtmlText(
         html = displayName,
         emojis = emojis,
+        lineHeight = 22.sp,
         modifier = Modifier
     )
 }
 
 @Composable
-private fun CreatedAtBox(createdAt: String) {
-    Text(
-        text = calculateTimeAgo(createdAt),
-        color = Color.Gray,
-        fontSize = 12.sp,
-    )
-}
-
-@Composable
-private fun AcctBox(acct: String) {
+private fun AcctBox(
+    acct: String,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = "@$acct",
         color = Color.Gray,
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
+        lineHeight = 14.sp,
         maxLines = 1,
-        overflow = TextOverflow.Ellipsis
+        overflow = TextOverflow.Ellipsis,
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun CreatedAtBox(
+    createdAt: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = calculateTimeAgo(createdAt),
+        color = Color.Gray,
+        fontSize = 12.sp,
+        lineHeight = 14.sp,
+        modifier = modifier
     )
 }
 
