@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.format.DateUtils
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -63,7 +65,10 @@ fun PostContent(
         ) {
             val displayName = status.reblog?.account?.displayName ?: status.account.displayName
             DisplayNameBox(displayName, status.account.emojis)
-            Row {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 AcctBox(status.account.acct)
                 CreatedAtBox(status.createdAt)
             }
@@ -127,10 +132,9 @@ private fun DisplayNameBox(
 @Composable
 private fun CreatedAtBox(createdAt: String) {
     Text(
-        text = calculateTimeAgo(createdAt).toString(),
+        text = calculateTimeAgo(createdAt),
         color = Color.Gray,
         fontSize = 12.sp,
-        textAlign = TextAlign.End
     )
 }
 
@@ -203,12 +207,12 @@ private fun DisplayImageView(
     }
 }
 
-private fun calculateTimeAgo(createdTimeString: String): CharSequence? {
+private fun calculateTimeAgo(createdTimeString: String): String {
     val createdTimeMillis = Instant.parse(createdTimeString).toEpochMilliseconds()
     val currentTimeMillis = Clock.System.now().toEpochMilliseconds()
     return DateUtils.getRelativeTimeSpanString(
         createdTimeMillis,
         currentTimeMillis,
         DateUtils.MINUTE_IN_MILLIS
-    )
+    ).toString()
 }
