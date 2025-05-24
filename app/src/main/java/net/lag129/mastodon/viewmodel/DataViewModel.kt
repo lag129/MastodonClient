@@ -21,6 +21,7 @@ class DataViewModel @Inject constructor(
     private var currentTimeline = Timeline.HOME
 
     val data = _data as State<List<Status>>
+    val isLoading = _isLoading as State<Boolean>
 
     enum class Timeline {
         HOME, GLOBAL, USER

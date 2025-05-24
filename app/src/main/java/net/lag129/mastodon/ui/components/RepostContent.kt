@@ -12,15 +12,11 @@ import net.lag129.mastodon.data.model.Status
 
 @Composable
 fun RepostContent(status: Status) {
-    if (status.reblog == null) {
-        PostContent(status)
-    } else {
-        BoostNameBox(
-            status.account.displayName,
-            status.account.emojis
-        )
-        PostContent(status.reblog)
-    }
+    BoostNameBox(
+        status.account.displayName,
+        status.account.emojis
+    )
+    PostContent(status.reblog!!)
 }
 
 @Composable
