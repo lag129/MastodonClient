@@ -34,6 +34,7 @@ fun HtmlText(
     modifier: Modifier = Modifier,
     color: Color? = null,
     fontSize: TextUnit? = null,
+    fontWeight: FontWeight? = null,
     lineHeight: TextUnit? = null
 ) {
     val annotatedString = buildAnnotatedString {
@@ -58,6 +59,7 @@ fun HtmlText(
         inlineContent = inlineContent,
         color = color ?: Color.Unspecified,
         fontSize = fontSize ?: TextUnit.Unspecified,
+        fontWeight = fontWeight ?: FontWeight.Normal,
         lineHeight = lineHeight ?: TextUnit.Unspecified,
         modifier = modifier
     )

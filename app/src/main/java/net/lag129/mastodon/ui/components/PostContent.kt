@@ -141,6 +141,7 @@ private fun DisplayNameBox(
     HtmlText(
         html = displayName,
         emojis = emojis,
+        fontWeight = FontWeight.Bold,
         lineHeight = 22.sp,
         modifier = Modifier
     )
