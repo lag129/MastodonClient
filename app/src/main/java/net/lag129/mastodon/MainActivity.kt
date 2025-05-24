@@ -92,13 +92,13 @@ class MainActivity : ComponentActivity() {
                         }
                     }
 
-                    composable(Screen.Info.route) {
+                    composable(Screen.User.route) {
                         Scaffold(
                             bottomBar = {
                                 BottomNavBar(navController, viewModel)
                             }
-                        ) { _ ->
-                            // TODO: implement
+                        ) { paddingValues ->
+                            TimelineScreen(viewModel, Modifier.padding(paddingValues))
                         }
                     }
                 }
@@ -111,5 +111,5 @@ sealed class Screen(val route: String) {
     data object Login : Screen("Login")
     data object Home : Screen("Home")
     data object Global : Screen("Global")
-    data object Info : Screen("Info")
+    data object User : Screen("User")
 }

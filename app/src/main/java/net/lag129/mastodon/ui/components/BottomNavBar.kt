@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItem
@@ -51,10 +50,15 @@ fun BottomNavBar(
             }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Info, contentDescription = "Info") },
-            label = { Text(text = "Info") },
-            selected = false,
-            onClick = {}
+            icon = { Icon(Icons.Default.CheckCircle, contentDescription = "User") },
+            label = { Text(text = "User") },
+            selected = currentRoute == Screen.User.route,
+            onClick = {
+                navController.navigate(Screen.User.route) {
+                    popUpTo(Screen.User.route) { inclusive = true }
+                }
+                viewModel.switchTimeline(DataViewModel.Timeline.USER)
+            }
         )
     }
 }

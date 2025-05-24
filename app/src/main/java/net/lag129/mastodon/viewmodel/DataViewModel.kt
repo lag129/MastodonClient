@@ -23,7 +23,7 @@ class DataViewModel @Inject constructor(
     val data = _data as State<List<Status>>
 
     enum class Timeline {
-        HOME, LOCAL, GLOBAL
+        HOME, GLOBAL, USER
     }
 
     init {
@@ -36,13 +36,15 @@ class DataViewModel @Inject constructor(
                 _isLoading.value = true
                 _error.value = null
 
+                val apiService = apiClient.createApiService()
+
                 val result = when (currentTimeline) {
-                    Timeline.HOME -> apiClient.createApiService().fetchHomeData(maxId)
-                    Timeline.LOCAL -> apiClient.createApiService().fetchLocalData(maxId)
-                    Timeline.GLOBAL -> apiClient.createApiService().fetchAccountData(
-                        "109302719268780804",
-                        maxId
-                    )
+                    Timeline.HOME -> apiService.fetchHomeData(maxId)
+                    Timeline.GLOBAL -> apiService.fetchGlobalData(maxId)
+                    Timeline.USER -> {
+                        val myId = apiService.getMyCredential().id
+                        apiService.fetchAccountData(myId, maxId)
+                    }
                 }
 
                 if (result.isNotEmpty()) {

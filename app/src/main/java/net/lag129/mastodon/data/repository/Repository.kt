@@ -2,6 +2,7 @@ package net.lag129.mastodon.data.repository
 
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
+import net.lag129.mastodon.data.model.CredentialAccount
 import net.lag129.mastodon.data.model.Status
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
@@ -33,13 +34,13 @@ interface ApiService {
         @Query("limit") limit: Int? = 20
     ): List<Status>
 
-//    @GET("/api/v1/timelines/public")
-//    suspend fun fetchGlobalData(
-//        @Query("max_id") maxId: String? = null,
-//        @Query("local") local: Boolean? = false,
-//        @Query("since_id") sinceId: String? = null,
-//        @Query("limit") limit: Int? = 20
-//    ): List<Status>
+    @GET("/api/v1/timelines/public")
+    suspend fun fetchGlobalData(
+        @Query("max_id") maxId: String? = null,
+        @Query("local") local: Boolean? = false,
+        @Query("since_id") sinceId: String? = null,
+        @Query("limit") limit: Int? = 20
+    ): List<Status>
 
     @GET("/api/v1/accounts/{id}/statuses")
     suspend fun fetchAccountData(
@@ -48,6 +49,18 @@ interface ApiService {
         @Query("since_id") sinceId: String? = null,
         @Query("limit") limit: Int? = 20
     ): List<Status>
+
+    @GET("/api/v1/accounts/verify_credentials")
+    suspend fun getMyCredential(): CredentialAccount
+
+//    @GET("/api/v1/accounts/{id}/statuses")
+//    suspend fun fetchMyAccountData(
+//        @Path("id") id: String,
+//        @Query("max_id") maxId: String? = null,
+//        @Query("since_id") sinceId: String? = null,
+//        @Query("limit") limit: Int? = 20
+//    ): List<Status>
+
 
     @PUT("/api/v1/statuses/{id}/emoji_reactions/{emoji}")
     suspend fun postReaction(

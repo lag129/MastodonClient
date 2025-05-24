@@ -36,7 +36,7 @@ data class Status(
     val bookmarked: Boolean?,
     val pinned: Boolean? = null,
     val filtered: List<FilterResult>?,
-    @SerialName("emoji_reactions") val emojiReactions: List<Reaction>?,
+    @SerialName("emoji_reactions") val emojiReactions: List<Reaction>? = null,
 )
 
 @Serializable
