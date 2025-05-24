@@ -3,6 +3,9 @@ package net.lag129.mastodon.ui.components
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.text.format.DateUtils
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,21 +31,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.net.toUri
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import net.lag129.mastodon.data.model.Account
 import net.lag129.mastodon.data.model.CustomEmoji
+import net.lag129.mastodon.data.model.MediaAttachment
 import net.lag129.mastodon.data.model.Status
 
 @Composable
@@ -89,10 +93,12 @@ fun PostContent(
         Column(
             modifier = Modifier.padding(start = 50.dp)
         ) {
-            ContentBox(status.content, status.emojis)
-            Spacer(Modifier.height(10.dp))
+            if (status.content.isNotEmpty()) {
+                ContentBox(status.content, status.emojis)
+                Spacer(Modifier.height(10.dp))
+            }
             if (status.mediaAttachments.isNotEmpty()) {
-                DisplayImageView(status.mediaAttachments[0].url, status.sensitive)
+                DisplayImageView(status.mediaAttachments[0])
                 Spacer(Modifier.height(10.dp))
             }
             if (!status.emojiReactions.isNullOrEmpty()) {
@@ -195,45 +201,55 @@ private fun ContentBox(
 }
 
 @Composable
-private fun DisplayImageView(
-    contentImageUrl: String,
-    isSensitive: Boolean = false,
-    isBlurredInitially: Boolean = true
-) {
-    var isClicked by remember { mutableStateOf(false) }
-    var isBlurred by remember { mutableStateOf(isBlurredInitially) }
+private fun DisplayImageView(mediaAttachments: MediaAttachment) {
+    var showFullScreen by remember { mutableStateOf(false) }
+
+    val imageUrl = if (!mediaAttachments.previewUrl.isNullOrEmpty()) {
+        mediaAttachments.previewUrl
+    } else {
+        mediaAttachments.url
+    }
 
     Box(
-        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clip(RoundedCornerShape(3))
-            .fillMaxSize()
-            .clickable { isClicked = true }
+            .aspectRatio(ratio = 1.618f)
+            .clickable { showFullScreen = true }
+            .clip(RoundedCornerShape(8.dp))
+            .fillMaxWidth()
     ) {
         AsyncImage(
-            url = contentImageUrl,
-            modifier = Modifier
-                .aspectRatio(ratio = 1.618f)
-                .clip(RoundedCornerShape(3))
-                .blur(radius = if (isBlurred && isSensitive) 40.dp else 0.dp),
-            contentScale = ContentScale.Crop
+            url = imageUrl,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxWidth()
         )
-        if (isBlurred && isSensitive) {
-            Text(
-                text = "閲覧注意",
-                color = Color.White,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxHeight()
+    }
+
+    AnimatedVisibility(
+        visible = showFullScreen,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        Dialog(
+            onDismissRequest = { showFullScreen = false },
+            properties = DialogProperties(
+                dismissOnBackPress = true,
+                dismissOnClickOutside = true,
+                usePlatformDefaultWidth = false,
             )
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                AsyncImage(
+                    url = mediaAttachments.url,
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
         }
     }
-    if (isClicked) {
-        FullScreenDialog(
-            contentImageUrl,
-            { isClicked = false }
-        )
-    }
 }
+
 
 private fun calculateTimeAgo(createdTimeString: String): String {
     val createdTimeMillis = Instant.parse(createdTimeString).toEpochMilliseconds()

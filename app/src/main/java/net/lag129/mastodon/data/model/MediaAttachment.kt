@@ -1,5 +1,6 @@
 package net.lag129.mastodon.data.model
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -7,8 +8,8 @@ data class MediaAttachment(
     val id: String,
     val type: String,
     val url: String,
-    val previewUrl: String? = null,
-    val remoteUrl: String? = null,
+    @SerialName("preview_url") val previewUrl: String? = null,
+    @SerialName("remote_url") val remoteUrl: String? = null,
     val meta: Meta,
     val description: String? = null,
     val blurhash: String? = null
