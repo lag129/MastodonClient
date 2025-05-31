@@ -1,7 +1,6 @@
 package net.lag129.mastodon.ui.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,7 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,7 +48,7 @@ fun ReactionBar(
         reactionList.forEach { reaction ->
             ReactionButton(
                 reaction = reaction,
-                modifier = Modifier.clickable {
+                onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     coroutineScope.launch {
                         try {
@@ -88,13 +89,20 @@ fun ReactionBar(
 @Composable
 fun ReactionButton(
     reaction: Reaction,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     FilledTonalButton(
-        onClick = {},
+        onClick = onClick,
         contentPadding = PaddingValues(8.dp),
-        enabled = reaction.me,
+        enabled = true,
         shape = RoundedCornerShape(32),
+        colors = ButtonDefaults.filledTonalButtonColors(
+            containerColor = if (reaction.me)
+                MaterialTheme.colorScheme.primaryContainer
+            else
+                MaterialTheme.colorScheme.secondaryContainer
+        ),
         modifier = modifier
     ) {
         Row {
