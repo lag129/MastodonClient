@@ -10,15 +10,15 @@ data class MediaAttachment(
     val url: String,
     @SerialName("preview_url") val previewUrl: String? = null,
     @SerialName("remote_url") val remoteUrl: String? = null,
-    val meta: Meta,
+    val meta: Meta? = null,
     val description: String? = null,
     val blurhash: String? = null
 )
 
 @Serializable
 data class Meta(
-    val original: MetaOriginal,
-    val small: MetaSmall
+    val original: MetaOriginal? = null,
+    val small: MetaSmall? = null
 )
 
 @Serializable
