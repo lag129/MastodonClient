@@ -25,4 +25,10 @@ class AppModule {
             }
         )
     }
+
+    @Singleton
+    @Provides
+    fun providePreferencesContext(@ApplicationContext context: Context): Context {
+        return context
+    }
 }

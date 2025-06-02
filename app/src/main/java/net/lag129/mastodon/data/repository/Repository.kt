@@ -1,9 +1,11 @@
 package net.lag129.mastodon.data.repository
 
+import android.content.Context
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import net.lag129.mastodon.data.model.CredentialAccount
 import net.lag129.mastodon.data.model.Status
+import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -77,7 +79,8 @@ interface ApiService {
 
 @Singleton
 class ApiClient @Inject constructor(
-    private val preferencesRepository: PreferencesRepository
+    private val preferencesRepository: PreferencesRepository,
+    private val context: Context
 ) {
     private val json = Json {
         ignoreUnknownKeys = true
@@ -97,8 +100,11 @@ class ApiClient @Inject constructor(
             chain.proceed(newRequest)
         }
 
+        val cacheDir = context.cacheDir
+        val cacheSize = 50L * 1024L * 1024L // 50MB
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor(authInterceptor)
+            .cache(Cache(cacheDir, cacheSize))
             .build()
 
         val retrofit = Retrofit.Builder()
