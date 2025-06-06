@@ -5,41 +5,54 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import net.lag129.mastodon.data.model.Status
 import net.lag129.mastodon.data.repository.ApiClient
+import net.lag129.mastodon.data.repository.StatusRepository
 import javax.inject.Inject
 
 @HiltViewModel
 class DataViewModel @Inject constructor(
-    val apiClient: ApiClient
+    private val repository: StatusRepository,
+    internal val apiClient: ApiClient
 ) : ViewModel() {
     private val _data = mutableStateOf<List<Status>>(emptyList())
+    val data = _data as State<List<Status>>
+
     private val _isLoading = mutableStateOf(false)
+    val isLoading = _isLoading as State<Boolean>
+
+    private val _statuses = MutableStateFlow<List<Status>>(emptyList())
+    val statuses: StateFlow<List<Status>> = _statuses
+
     private val _error = mutableStateOf<String?>(null)
     private var maxId: String? = null
-    private var currentTimeline = Timeline.HOME
 
-    val data = _data as State<List<Status>>
-    val isLoading = _isLoading as State<Boolean>
+    private var currentTimeline = Timeline.HOME
 
     enum class Timeline {
         HOME, GLOBAL, USER
     }
 
     init {
-        fetchData()
+        loadStatuses()
     }
 
-    private fun fetchData() {
+    private fun loadStatuses() {
         viewModelScope.launch {
             try {
+                val localStatuses = repository.getAllStatuses()
+                _statuses.value = localStatuses
+
+
                 _isLoading.value = true
                 _error.value = null
 
                 val apiService = apiClient.createApiService()
 
-                val result = when (currentTimeline) {
+                val remoteStatuses = when (currentTimeline) {
                     Timeline.HOME -> apiService.fetchHomeData(maxId)
                     Timeline.GLOBAL -> apiService.fetchGlobalData(maxId)
                     Timeline.USER -> {
@@ -48,9 +61,13 @@ class DataViewModel @Inject constructor(
                     }
                 }
 
-                if (result.isNotEmpty()) {
-                    maxId = result.last().id
-                    _data.value = _data.value + result
+                repository.saveStatuses(remoteStatuses)
+                _statuses.value = repository.getAllStatuses()
+
+                maxId = if (remoteStatuses.isNotEmpty()) {
+                    remoteStatuses.last().id
+                } else {
+                    null
                 }
             } catch (e: Exception) {
                 _error.value = e.message
@@ -63,22 +80,35 @@ class DataViewModel @Inject constructor(
 
     fun fetchNextPage() {
         if (!_isLoading.value) {
-            fetchData()
+            loadStatuses()
         }
     }
 
-//    fun refresh() {
-//        maxId = null
-//        _data.value = emptyList()
-//        fetchData()
-//    }
-
     fun switchTimeline(timeline: Timeline) {
         if (currentTimeline != timeline) {
-            currentTimeline = timeline
-            maxId = null
-            _data.value = emptyList()
-            fetchData()
+            viewModelScope.launch {
+                try {
+                    _isLoading.value = true
+
+                    repository.clearStatuses()
+                    
+                    _statuses.value = emptyList()
+                    _data.value = emptyList()
+
+                    currentTimeline = timeline
+                    maxId = null
+
+                    val checkEmpty = repository.getAllStatuses()
+                    if (checkEmpty.isNotEmpty()) {
+                        repository.clearStatuses()
+                    }
+
+                    loadStatuses()
+                } catch (e: Exception) {
+                    _error.value = e.message
+                    e.printStackTrace()
+                }
+            }
         }
     }
 }

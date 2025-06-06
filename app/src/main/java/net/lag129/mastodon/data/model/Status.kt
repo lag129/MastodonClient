@@ -1,11 +1,14 @@
 package net.lag129.mastodon.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Entity
 @Serializable
 data class Status(
-    val id: String,
+    @PrimaryKey val id: String,
     val uri: String,
     @SerialName("created_at") val createdAt: String,
     val account: Account,

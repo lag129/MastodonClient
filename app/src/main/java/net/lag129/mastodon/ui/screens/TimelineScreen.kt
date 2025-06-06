@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -21,20 +22,20 @@ fun TimelineScreen(
     viewModel: DataViewModel,
     modifier: Modifier = Modifier
 ) {
-    val data by remember { viewModel.data }
+    val statuses by remember { viewModel.statuses }.collectAsState()
     val isLoading by remember { viewModel.isLoading }
 
     LazyColumn(
         modifier = modifier.fillMaxWidth()
     ) {
-        itemsIndexed(data, key = { _, item -> item.id }) { index, status ->
+        itemsIndexed(statuses, key = { _, item -> item.id }) { index, status ->
             if (status.reblog == null) {
                 PostContent(status)
             } else {
                 RepostContent(status)
             }
 
-            if (index >= data.size - 5 && !isLoading) {
+            if (index >= statuses.size - 5 && !isLoading) {
                 LaunchedEffect(index) {
                     viewModel.fetchNextPage()
                 }

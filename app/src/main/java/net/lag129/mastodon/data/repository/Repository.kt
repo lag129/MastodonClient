@@ -85,7 +85,7 @@ class ApiClient @Inject constructor(
     private val json = Json {
         ignoreUnknownKeys = true
     }
-
+    
     fun createApiService(): ApiService {
         val serverName = runBlocking { preferencesRepository.readServerName() }
         val bearerToken = runBlocking { preferencesRepository.readBearerToken() }
