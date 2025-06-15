@@ -43,7 +43,7 @@ fun HtmlText(
     }
 
     val inlineContent = mutableMapOf<String, InlineTextContent>()
-    emojis.forEach { emoji ->
+    for (emoji in emojis) {
         inlineContent[emoji.shortcode] = InlineTextContent(
             Placeholder(20.sp, 20.sp, PlaceholderVerticalAlign.Center)
         ) {
@@ -69,31 +69,36 @@ private fun appendEmojisToText(
     originalText: AnnotatedString,
     emojis: List<CustomEmoji>
 ): AnnotatedString {
-    if (emojis.isEmpty()) return originalText
     val plainText = originalText.text
+    val shortcodePattern = Regex(":([a-zA-Z0-9_]+):")
+
+    val emojiMap = emojis.associateBy { it.shortcode }
 
     return buildAnnotatedString {
-        var currentIndex = 0
-        while (currentIndex < plainText.length) {
-            val nextEmoji = emojis.minByOrNull { emoji ->
-                val index = plainText.indexOf(":${emoji.shortcode}:", currentIndex)
-                if (index == -1) Int.MAX_VALUE else index
+        var lastIndex = 0
+
+        for (matchResult in shortcodePattern.findAll(plainText)) {
+            val shortcode = matchResult.groupValues[1]
+            val emoji = emojiMap[shortcode]
+
+            append(originalText.subSequence(lastIndex, matchResult.range.first))
+
+            if (emoji != null) {
+                appendInlineContent(shortcode, shortcode)
+            } else {
+                append(
+                    originalText.subSequence(
+                        matchResult.range.first,
+                        matchResult.range.last + 1
+                    )
+                )
             }
 
-            if (nextEmoji != null) {
-                val startIndex = plainText.indexOf(":${nextEmoji.shortcode}:", currentIndex)
-                if (startIndex != -1) {
-                    append(originalText.subSequence(currentIndex, startIndex))
-                    appendInlineContent(nextEmoji.shortcode, nextEmoji.shortcode)
-                    currentIndex = startIndex + nextEmoji.shortcode.length + 2
-                } else {
-                    append(originalText.subSequence(currentIndex, plainText.length))
-                    break
-                }
-            } else {
-                append(originalText.subSequence(currentIndex, plainText.length))
-                break
-            }
+            lastIndex = matchResult.range.last + 1
+        }
+
+        if (lastIndex < plainText.length) {
+            append(originalText.subSequence(lastIndex, plainText.length))
         }
     }
 }
