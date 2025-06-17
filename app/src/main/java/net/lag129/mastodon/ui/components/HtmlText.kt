@@ -7,6 +7,7 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
@@ -65,6 +66,8 @@ fun HtmlText(
     )
 }
 
+@SuppressLint("ComposeUnstableCollections")
+@Composable
 private fun appendEmojisToText(
     originalText: AnnotatedString,
     emojis: List<CustomEmoji>
@@ -72,7 +75,9 @@ private fun appendEmojisToText(
     val plainText = originalText.text
     val shortcodePattern = Regex(":([a-zA-Z0-9_]+):")
 
-    val emojiMap = emojis.associateBy { it.shortcode }
+    val emojiMap = remember(emojis) {
+        emojis.associateBy { it.shortcode }
+    }
 
     return buildAnnotatedString {
         var lastIndex = 0
