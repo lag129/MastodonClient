@@ -195,6 +195,7 @@ private fun ContentBox(
         HtmlText(
             html = contentTxt,
             emojis = emojis,
+            fontSize = 16.sp,
             modifier = Modifier
         )
     }

@@ -19,10 +19,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.launch
 import net.lag129.mastodon.data.model.Reaction
@@ -42,7 +44,7 @@ fun ReactionBar(
 
     Row(
         modifier = modifier
-            .height(36.dp)
+            .height(30.dp)
             .horizontalScroll(rememberScrollState()),
     ) {
         reactionList.forEach { reaction ->
@@ -94,7 +96,7 @@ fun ReactionButton(
 ) {
     FilledTonalButton(
         onClick = onClick,
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = PaddingValues(6.dp),
         enabled = true,
         shape = RoundedCornerShape(32),
         colors = ButtonDefaults.filledTonalButtonColors(
@@ -105,10 +107,16 @@ fun ReactionButton(
         ),
         modifier = modifier
     ) {
-        Row {
-            reaction.url?.let {
-                if (it.isEmpty()) {
-                    Text(reaction.name)
+        Row(
+//            modifier = Modifier.align(Alignment.CenterVertically)
+        ) {
+            reaction.url.let {
+                if (it.isNullOrEmpty()) {
+                    Text(
+                        text = reaction.name,
+                        fontSize = 14.sp,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
                 } else {
                     AsyncImage(
                         url = it,
@@ -117,7 +125,11 @@ fun ReactionButton(
                 }
             }
             Spacer(Modifier.width(8.dp))
-            Text(reaction.count.toString())
+            Text(
+                reaction.count.toString(),
+                fontSize = 14.sp,
+                modifier = Modifier.alignByBaseline()
+            )
         }
     }
 }
