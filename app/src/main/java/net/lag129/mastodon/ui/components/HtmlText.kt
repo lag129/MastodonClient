@@ -139,11 +139,21 @@ private fun AppendHtmlNodes(
                                     textDecoration = TextDecoration.Underline
                                 )
                             )
-                        }
-                        AppendHtmlNodes(node.childNodes(), builder)
-                        if (href.isNotBlank()) {
+
+                            val linkUrl = node.text()
+                            val maxUrlLength = 28
+
+                            if (linkUrl.length > maxUrlLength) {
+                                val shortUrl = "${linkUrl.take(maxUrlLength)}..."
+                                builder.append(shortUrl)
+                            } else {
+                                AppendHtmlNodes(node.childNodes(), builder)
+                            }
+
                             builder.pop()
                             builder.pop()
+                        } else {
+                            AppendHtmlNodes(node.childNodes(), builder)
                         }
                     }
 
