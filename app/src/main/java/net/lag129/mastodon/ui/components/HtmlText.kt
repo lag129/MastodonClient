@@ -141,10 +141,15 @@ private fun AppendHtmlNodes(
                             )
 
                             val linkUrl = node.text()
-                            val maxUrlLength = 28
+                            val maxUrlLength = 30
 
                             if (linkUrl.length > maxUrlLength) {
-                                val shortUrl = "${linkUrl.take(maxUrlLength)}..."
+                                val shortUrl =
+                                    "${
+                                        linkUrl.take(maxUrlLength)
+                                            .removePrefix("https://www.")
+                                            .removePrefix("https://")
+                                    }..."
                                 builder.append(shortUrl)
                             } else {
                                 AppendHtmlNodes(node.childNodes(), builder)
