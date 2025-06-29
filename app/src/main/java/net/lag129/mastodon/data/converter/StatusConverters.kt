@@ -14,6 +14,7 @@ import net.lag129.mastodon.data.model.Reaction
 import net.lag129.mastodon.data.model.Status
 import net.lag129.mastodon.data.model.Tag
 
+@Suppress("unused")
 class StatusConverters {
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -83,7 +84,7 @@ class StatusConverters {
         return if (value.isBlank()) emptyList() else json.decodeFromString(value)
     }
 
-    // Status変換（再帰的な参照のため）
+    // Status変換
     @TypeConverter
     fun fromStatus(status: Status?): String {
         return status?.let { json.encodeToString(it) } ?: ""

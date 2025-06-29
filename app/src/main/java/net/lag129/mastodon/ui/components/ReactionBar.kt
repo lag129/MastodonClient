@@ -107,9 +107,7 @@ fun ReactionButton(
         ),
         modifier = modifier
     ) {
-        Row(
-//            modifier = Modifier.align(Alignment.CenterVertically)
-        ) {
+        Row {
             reaction.url.let {
                 if (it.isNullOrEmpty()) {
                     Text(
